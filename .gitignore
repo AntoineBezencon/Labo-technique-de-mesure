@@ -10,7 +10,6 @@
 *.synctex.gz
 *.toc
 *.xdv
-*.pdf
 build/
 
 # Python generated files
