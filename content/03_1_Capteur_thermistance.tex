@@ -9,4 +9,37 @@ La formule inverse exprimant la valeur de la résistance de la NTC $R_{NTC}$ en 
 \end{equation}
 
 \subsection{Mesures en flux d'air et suréchantillonnage}
-% Acquisition sèche-cheveux, suréchantillonnage (oversampling), moyenne et comparaison
+
+==========================================
+        RAPPORT DE COMPARAISON
+==========================================
+--- 1. Série Standard (Section 1.4) ---
+  * Température moyenne : 41.134 °C
+  * Écart-type (bruit)  : 2.977 °C
+
+--- 2. Série Suréchantillonnée (Section 1.5) ---
+  * Température moyenne : 42.828 °C
+  * Écart-type (bruit)  : 3.152 °C
+==========================================
+
+\begin{enumerate}
+    \item \textbf{Comparaison graphique :} Les deux séries temporelles (mesure normale et mesure suréchantillonnée) ont été tracées conjointement sur un même graphique, mettant en évidence le lissage du signal apporté par la moyenne sur $100$ échantillons.
+    \item \textbf{Températures moyennes :} 
+    \begin{itemize}
+        \item Série normale : $T_{moy,norm} \approx \dots \,^{\circ}\text{C}$
+        \item Série suréchantillonnée : $T_{moy,over} \approx \dots \,^{\circ}\text{C}$
+    \end{itemize}
+    \item \textbf{Écarts-types :} L'analyse statistique sur l'intervalle de mesure stationnaire donne :
+    \begin{itemize}
+        \item $\sigma_{norm} \approx \dots \,^{\circ}\text{C}$
+        \item $\sigma_{over} \approx \dots \,^{\circ}\text{C}$
+    \end{itemize}
+    \item \textbf{Discussion :} Le suréchantillonnage combiné au calcul de la moyenne arithmétique réduit significativement la variance du bruit haute fréquence sur la mesure de température, améliorant ainsi la résolution effective et la stabilité du signal affiché.
+\end{enumerate}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{assets/graphs/output.png}
+    \caption{}
+    \label{fig:diff_over_normal}
+\end{figure}
