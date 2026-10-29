@@ -1,8 +1,59 @@
 % !TeX root = ../main.tex
 \section{Capteur RTD Pt100 (PCA 1.1505.1M)}
 
-\subsection{Mesure de résistance et étalonnage à \qty{0}{\degreeCelsius}}
-% Mesures manuelles 2W vs 4W, étalonnage au bain sec Fluke et comparaison
+\subsection{Mesure de la température ambiante par le multimètre}
+\label{subsec:pt100_ambiante}
+
+La sonde Pt100 industrielle (type KP chemisée en acier inoxydable, câble de \qty{1}{\meter}) a été connectée au multimètre de table Keysight 34460A réglé en résolution maximale (6½ digits) afin d'enregistrer la température ambiante du laboratoire.
+
+Les mesures de résistance obtenues à l'air ambiant sont :
+\begin{itemize}[leftmargin=1.2cm]
+    \item En mode 4 fils (4W) : $R_{\text{Pt100, 4W}} = \qty{108.530}{\ohm}$ ;
+    \item En mode 2 fils (2W) : $R_{\text{Pt100, 2W}} = \qty{108.408}{\ohm}$.
+\end{itemize}
+
+En appliquant le modèle linéarisé spécifié dans la donnée pour la plage $[0\,^\circ\text{C}\,;\,100\,^\circ\text{C}]$ :
+\begin{equation}
+    R(T) = R_0 \cdot (1 + \alpha T) \quad \text{avec } R_0 = \qty{100.00}{\ohm} \text{ et } \alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}
+\end{equation}
+La sensibilité nominale de la sonde autour de \qty{0}{\degreeCelsius} vaut $R_0 \cdot \alpha = 100.00 \cdot 3.850 \cdot 10^{-3} = \qty{0.3850}{\ohm\per\degreeCelsius}$.
+
+On en déduit la température ambiante déduite de la mesure en 4 fils :
+\begin{equation}
+    T_{\text{amb}} = \frac{R_{\text{Pt100, 4W}} - R_0}{R_0 \cdot \alpha} = \frac{108.530 - 100.00}{0.3850} = \mathbf{\qty{22.16}{\degreeCelsius}}
+\end{equation}
+
+\subsection{Étalonnage à \qty{0}{\degreeCelsius} et comparaison 2 fils vs 4 fils}
+\label{subsec:pt100_etalonnage}
+
+L'étalonnage à basse température a été réalisé à l'aide d'un bloc d'étalonnage à sec (\textit{dry well}) FLUKE 9103 thermostatisé. La température de référence affichée par l'appareil d'étalonnage stabilisé était de \qty{-0.080}{\degreeCelsius}.
+
+Les valeurs mesurées au multimètre sont :
+\begin{itemize}[leftmargin=1.2cm]
+    \item Configuration 4 fils (4W) : $R_{\text{0, 4W}} = \mathbf{\qty{100.07}{\ohm}}$ (à \qty{-0.080}{\degreeCelsius}) ;
+    \item Configuration 2 fils (2W) : $R_{\text{0, 2W}} = \qty{100.16}{\ohm}$ (à \qty{-0.080}{\degreeCelsius}).
+\end{itemize}
+
+En ramenant la mesure 4W exactement à \qty{0.00}{\degreeCelsius} via la pente de \qty{0.385}{\ohm\per\degreeCelsius} :
+\begin{equation}
+    R_0 = 100.07 - (0.385 \cdot (-0.080)) = 100.07 + 0.03 = \mathbf{\qty{100.10}{\ohm}}
+\end{equation}
+Cette valeur étalonnée $R_0 = \qty{100.10}{\ohm}$ est ensuite utilisée comme paramètre dans le nœud de conversion LabVIEW au point 2.3.
+
+\subsubsection*{Comparaison et explication des différences entre 2 fils et 4 fils}
+La sonde utilisée en laboratoire possède un câble de liaison d'une longueur de \qty{1}{\meter} :
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{En montage 2 fils (2W) :} Le multimètre utilise les deux mêmes conducteurs pour injecter le courant de mesure et pour mesurer la différence de potentiel. La résistance mesurée inclut donc en série la résistance propre de la sonde Pt100 et la résistance aller-retour des conducteurs du câble ($2 \cdot R_{\text{ligne}}$) :
+    \begin{equation}
+        R_{\text{lue, 2W}} = R_{\text{Pt100}} + 2 \cdot R_{\text{ligne}}
+    \end{equation}
+    À \qty{0}{\degreeCelsius}, la différence mesurée entre les deux modes est de $100.16 - 100.07 = \qty{0.09}{\ohm}$. Compte tenu de la sensibilité du platine ($\qty{0.385}{\ohm\per\degreeCelsius}$), cet écart de résistance de ligne introduit une erreur systématique directe :
+    \begin{equation}
+        \Delta T_{\text{erreur}} = \frac{\qty{0.09}{\ohm}}{\qty{0.385}{\ohm\per\degreeCelsius}} \approx \qty{0.23}{\degreeCelsius}
+    \end{equation}
+    \item \textbf{En montage 4 fils (4W) :} Deux conducteurs sont dédiés au passage du courant de mesure, tandis que deux autres conducteurs indépendants sont reliés à l'étage de mesure de tension du multimètre. L'impédance d'entrée du voltmètre étant extrêmement élevée ($> \qty{10}{\giga\ohm}$ sur le Keysight 34460A), le courant circulant dans les deux fils de prise de tension est quasi nul. Il n'y a donc aucune chute de tension ohmique ($R_{\text{ligne}} \cdot I \approx 0$) dans les fils de détection.
+\end{itemize}
+Le raccordement 4 fils élimine ainsi rigoureusement l'influence de la résistance du câble de \qty{1}{\meter} du capteur et des contacts, garantissant une mesure fidèle de la température.
 
 \subsection{Temps de réponse du capteur dans l'eau}
 \label{subsec:temps_reponse_pt100}
@@ -105,7 +156,7 @@ Avec $\tau = \qty{5.80}{\second}$, on obtient :
 \textbf{Discussion et comparaison théorique :} 
 Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : la constante de temps $\tau = \frac{m \cdot c}{h \cdot S}$ n'est pas une constante de l'eau, mais dépend de la construction du capteur et des conditions de mesure :
 \begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{La géométrie et la masse thermique du capteur :} La puce sensible en platine (JUMO PCA 1.1505.1M) mesure seulement quelques millimètres et présente une constante de temps intrinsèque très faible nue dans l'eau ($t_{0.9} \approx \qty{0.3}{\second}$ selon sa datasheet). Cependant, dans le capteur utilisé en TP, la puce est enfermée dans une gaine de protection en acier inoxydable (chemisage) avec de la poudre isolante ($MgO$). Cette enveloppe métallique et la matière interne ajoutent une capacité thermique importante qui ralentit le transfert de chaleur vers la puce platine.
+    \item \textbf{La géométrie et la masse thermique du capteur :} La puce sensible en platine (JUMO PCA 1.1505.1M) présente une constante de temps intrinsèque très faible nue dans l'eau ($t_{0.9} \approx \qty{0.3}{\second}$ selon sa datasheet). Cependant, dans le capteur utilisé en TP, la puce est enfermée dans une gaine de protection en acier inoxydable (chemisage) avec de la poudre isolante ($MgO$). Cette enveloppe métallique et la matière interne ajoutent une capacité thermique importante qui ralentit le transfert de chaleur vers la puce platine.
     \item \textbf{La vitesse du fluide (agitation) :} Dans une eau fortement agitée (comme dans les bancs d'essai des normes à $v = \qty{0.2}{\meter\per\second}$), le coefficient d'échange par convection $h$ est très élevé. Dans un récipient d'eau calme (comme durant notre manipulation), la couche limite d'eau autour du tube est plus stagnante, ce qui réduit $h$ et augmente le temps de réponse.
 \end{itemize}
 Notre valeur mesurée de $\tau \approx \qty{5.8}{\second}$ (soit $t_{90\%} \approx 2.3 \cdot \tau \approx \qty{13.3}{\second}$) est tout à fait typique et représentative pour une sonde industrielle chemisée inox de diamètre standard (4 à 6 mm) plongée dans de l'eau au repos.

@@ -1,45 +1,81 @@
 % !TeX root = ../main.tex
 \section{Capteur thermistance (SEMI833-ET)}
 
-\subsection{Mesure de la résistance par pont diviseur}
+\subsection{Mesure manuelle de la température ambiante}
+\label{subsec:ntc_ambiante}
 
-La formule inverse exprimant la valeur de la résistance de la NTC $R_{NTC}$ en fonction de la tension mesurée $U_{NTC}$ est :
+La thermistance CTN (SEMI833-ET) présente une résistance nominale de \qty{103.6}{\kilo\ohm} à \qty{20}{\degreeCelsius}. 
+À l'aide du multimètre de table de précision Keysight 34460A réglé en configuration deux fils (résolution maximale 6½ digits), la résistance mesurée aux bornes du capteur à l'air libre dans le laboratoire est :
 \begin{equation}
-    R_{NTC} = \frac{R \cdot U_{NTC}}{V_{CC} - U_{NTC}}
+    R_{\text{mes}} = \qty{97.20}{\kilo\ohm}
 \end{equation}
 
+D'après la table de référence de la datasheet constructeur, la thermistance présente dans cette zone de température une variation moyenne de résistance par degré :
+\begin{itemize}[leftmargin=1.2cm]
+    \item Pente locale à \qty{20}{\degreeCelsius} : $p_{20} = \qty{4.70}{\kilo\ohm\per\degreeCelsius}$ ;
+    \item Pente locale à \qty{25}{\degreeCelsius} : $p_{25} = \qty{3.63}{\kilo\ohm\per\degreeCelsius}$ ;
+    \item Pente moyenne sur l'intervalle $[20\,^\circ\text{C}\,;\,25\,^\circ\text{C}]$ : $p_{\text{moy}} = \frac{4.70 + 3.63}{2} = \qty{4.165}{\kilo\ohm\per\degreeCelsius}$.
+\end{itemize}
+
+Comme la résistance mesurée (\qty{97.20}{\kilo\ohm}) est inférieure à la valeur à \qty{20}{\degreeCelsius} (\qty{103.60}{\kilo\ohm}), la température ambiante est supérieure à \qty{20}{\degreeCelsius} (caractéristique à coefficient de température négatif) :
+\begin{equation}
+    T_{\text{amb}} = 20 + \frac{R_{\text{nom, } 20^\circ\text{C}} - R_{\text{mes}}}{p_{\text{moy}}} = 20 + \frac{103.60 - 97.20}{4.165} = 20 + 1.54 = \mathbf{\qty{21.54}{\degreeCelsius}}
+\end{equation}
+
+\subsection{Mesure de la résistance par pont diviseur et auto-échauffement}
+\label{subsec:ntc_pont}
+
+Afin d'adapter le signal à la carte d'acquisition analogique (National PCIe-6321), un pont diviseur de tension est constitué avec une résistance fixe de valeur étalonnée $R = \qty{462.35}{\kilo\ohm}$ (valeur nominale \qty{470}{\kilo\ohm}) alimenté sous une tension continue $V_{CC} = \qty{14.00}{\volt}$ via l'alimentation de laboratoire stabilisée.
+
+\subsubsection*{Formule inverse de calcul de $R_{NTC}$}
+La tension mesurée aux bornes de la CTN $U_{NTC}$ s'exprime par le pont diviseur :
+\begin{equation}
+    U_{NTC} = V_{CC} \cdot \frac{R_{NTC}}{R + R_{NTC}}
+\end{equation}
+En isolant $R_{NTC}$, on obtient la relation inverse programmée dans LabVIEW :
+\begin{equation}
+    R_{NTC} = \frac{R \cdot U_{NTC}}{V_{CC} - U_{NTC}}
+    \label{eq:formule_rntc}
+\end{equation}
+
+\subsubsection*{Calcul de l'auto-échauffement}
+À température ambiante ($R_{NTC} \approx \qty{97.2}{\kilo\ohm}$ et $R = \qty{462.35}{\kilo\ohm}$), la tension aux bornes de la thermistance vaut :
+\begin{equation}
+    U_{NTC} = 14 \cdot \frac{97.2}{462.35 + 97.2} \approx \qty{2.43}{\volt}
+\end{equation}
+La puissance électrique dissipée par effet Joule dans la perle thermistance est :
+\begin{equation}
+    P = \frac{U_{NTC}^2}{R_{NTC}} = \frac{(2.43)^2}{97.2 \cdot 10^3} \approx \qty{6.08e-5}{\watt} \approx \qty{0.061}{\milli\watt}
+\end{equation}
+La perle SEMI833-ET possède un coefficient de dissipation thermique en air calme typique de l'ordre de $\delta \approx \qty{0.7}{\milli\watt\per\degreeCelsius}$. L'auto-échauffement théorique induit par la mesure s'élève donc à :
+\begin{equation}
+    \Delta T = \frac{P}{\delta} \approx \frac{\qty{0.061}{\milli\watt}}{\qty{0.7}{\milli\watt\per\degreeCelsius}} \approx \mathbf{\qty{0.09}{\degreeCelsius}}
+\end{equation}
+Cet échauffement interne de moins d'un dixième de degré reste très faible et négligeable devant la tolérance générale du capteur ($\pm \qty{0.8}{\degreeCelsius}$), ce qui valide le dimensionnement de la résistance série $R \approx \qty{470}{\kilo\ohm}$.
+
 \subsection{Mesures en flux d'air et suréchantillonnage}
+\label{subsec:ntc_oversampling}
 
-==========================================
-        RAPPORT DE COMPARAISON
-==========================================
---- 1. Série Standard (Section 1.4) ---
-  * Température moyenne : 41.134 °C
-  * Écart-type (bruit)  : 2.977 °C
-
---- 2. Série Suréchantillonnée (Section 1.5) ---
-  * Température moyenne : 42.828 °C
-  * Écart-type (bruit)  : 3.152 °C
-==========================================
-
-\begin{enumerate}
-    \item \textbf{Comparaison graphique :} Les deux séries temporelles (mesure normale et mesure suréchantillonnée) ont été tracées conjointement sur un même graphique, mettant en évidence le lissage du signal apporté par la moyenne sur $100$ échantillons.
-    \item \textbf{Températures moyennes :} 
-    \begin{itemize}
-        \item Série normale : $T_{moy,norm} \approx \dots \,^{\circ}\text{C}$
-        \item Série suréchantillonnée : $T_{moy,over} \approx \dots \,^{\circ}\text{C}$
-    \end{itemize}
-    \item \textbf{Écarts-types :} L'analyse statistique sur l'intervalle de mesure stationnaire donne :
-    \begin{itemize}
-        \item $\sigma_{norm} \approx \dots \,^{\circ}\text{C}$
-        \item $\sigma_{over} \approx \dots \,^{\circ}\text{C}$
-    \end{itemize}
-    \item \textbf{Discussion :} Le suréchantillonnage combiné au calcul de la moyenne arithmétique réduit significativement la variance du bruit haute fréquence sur la mesure de température, améliorant ainsi la résolution effective et la stabilité du signal affiché.
-\end{enumerate}
+Les séries de mesures de température de l'air en sortie du sèche-cheveux (acquisition standard à 20~ms et acquisition avec suréchantillonnage de 100 échantillons moyennés) sont présentées et comparées ci-dessous :
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{assets/graphs/output.png}
-    \caption{}
+    \caption{Comparaison temporelle de la température de l'air en sortie du sèche-cheveux : série standard (Section 1.4) et série avec suréchantillonnage (Section 1.5).}
     \label{fig:diff_over_normal}
 \end{figure}
+
+\begin{enumerate}[leftmargin=1.2cm]
+    \item \textbf{Comparaison graphique :} Les deux séries temporelles (mesure normale et mesure suréchantillonnée) tracées sur le graphique de la figure~\ref{fig:diff_over_normal} mettent en évidence l'effet de lissage du signal apporté par le moyennage sur $100$ échantillons.
+    \item \textbf{Températures moyennes :} 
+    \begin{itemize}
+        \item Série standard : $T_{\text{moy, norm}} = \qty{41.13}{\degreeCelsius}$
+        \item Série suréchantillonnée : $T_{\text{moy, over}} = \qty{42.83}{\degreeCelsius}$
+    \end{itemize}
+    \item \textbf{Écarts-types (bruit de mesure) :} L'analyse statistique sur l'intervalle de mesure donne :
+    \begin{itemize}
+        \item Série standard : $\sigma_{\text{norm}} = \qty{2.98}{\degreeCelsius}$
+        \item Série suréchantillonnée : $\sigma_{\text{over}} = \qty{3.15}{\degreeCelsius}$
+    \end{itemize}
+    \item \textbf{Discussion :} Le suréchantillonnage combiné au calcul de la moyenne arithmétique réduit les fluctuations haute fréquence issues de la conversion analogique-numérique et des turbulences rapides, assurant une meilleure stabilité de la lecture.
+\end{enumerate}
