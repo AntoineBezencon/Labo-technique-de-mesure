@@ -12,6 +12,10 @@ Les mesures de résistance obtenues à l'air ambiant sont :
     \item En mode 2 fils (2W) : $R_{\text{Pt100, 2W}} = \qty{108.408}{\ohm}$.
 \end{itemize}
 
+\noindent
+\textbf{Remarque métrologique sur l'air ambiant :} \\
+On observe que la résistance mesurée en 2W est très légèrement inférieure à celle en 4W ($\Delta R \approx \qty{-0.12}{\ohm}$, équivalant à un écart de température de $\approx \qty{0.3}{\degreeCelsius}$). Dans l'air libre non régulé du laboratoire, de légères fluctuations thermiques ambiantes ainsi que la manipulation de la sonde entre les deux séries indépendantes de mesure expliquent cette infime dérive temporelle. C'est uniquement lors de l'immersion dans le bloc d'étalonnage thermostatisé Fluke 9103 parfaitement stable à \qty{0}{\degreeCelsius} (section~\ref{subsec:pt100_etalonnage}) que l'effet propre de la résistance des fils de liaison a pu être rigoureusement isolé ($R_{\text{2W}} - R_{\text{4W}} = \qty{0.09}{\ohm}$).
+
 En appliquant le modèle linéarisé spécifié dans la donnée pour la plage $[0\,^\circ\text{C}\,;\,100\,^\circ\text{C}]$ :
 \begin{equation}
     R(T) = R_0 \cdot (1 + \alpha T) \quad \text{avec } R_0 = \qty{100.00}{\ohm} \text{ et } \alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}
@@ -20,7 +24,18 @@ La sensibilité nominale de la sonde autour de \qty{0}{\degreeCelsius} vaut $R_0
 
 On en déduit la température ambiante déduite de la mesure en 4 fils :
 \begin{equation}
-    T_{\text{amb}} = \frac{R_{\text{Pt100, 4W}} - R_0}{R_0 \cdot \alpha} = \frac{108.530 - 100.00}{0.3850} = \mathbf{\qty{22.16}{\degreeCelsius}}
+    T_{\text{amb}} = \frac{R_{\text{Pt100, 4W}} - R_0}{R_0 \cdot \alpha} = \frac{108.530 - 100.00}{0.3850} = \qty{22.16}{\degreeCelsius}
+\end{equation}
+
+\subsubsection*{Estimation de l'incertitude sur la mesure Pt100}
+Selon la norme internationale IEC 60751 régissant les thermomètres industriels à résistance de platine (classe de tolérance A pour les capteurs métrologiques chemisés tels que le modèle KP), l'écart maximal toléré à la température de mesure ($T \approx \qty{22}{\degreeCelsius}$) est donné par :
+\begin{equation}
+    \Delta T_{\text{tol}} = \pm (0.15 + 0.002 \cdot |T|) \approx \pm (0.15 + 0.002 \times 22.16) \approx \pm \qty{0.19}{\degreeCelsius}
+\end{equation}
+(avec une tolérance nominale à \qty{0}{\degreeCelsius} de $\pm \qty{0.15}{\degreeCelsius}$).
+L'incertitude de lecture du multimètre Keysight 34460A en 4W étant inférieure à $\pm \qty{0.004}{\ohm}$ (soit $\pm \qty{0.01}{\degreeCelsius}$), l'incertitude de mesure est totalement dominée par la tolérance normalisée du capteur. L'incertitude-type associée est donc :
+\begin{equation}
+    T_{\text{amb, Pt100}} = \mathbf{\qty{22.16 \pm 0.15}{\degreeCelsius}} \quad \text{avec } u(T_{\text{amb, Pt100}}) = \qty{0.15}{\degreeCelsius}
 \end{equation}
 
 \subsection{Étalonnage à \qty{0}{\degreeCelsius} et comparaison 2 fils vs 4 fils}
@@ -55,6 +70,25 @@ La sonde utilisée en laboratoire possède un câble de liaison d'une longueur d
 \end{itemize}
 Le raccordement 4 fils élimine ainsi rigoureusement l'influence de la résistance du câble de \qty{1}{\meter} du capteur et des contacts, garantissant une mesure fidèle de la température.
 
+\subsection{Mesure avec le nœud « convertir une mesure de RTD » sous LabVIEW}
+\label{subsec:pt100_labview_node}
+
+Afin d'automatiser la chaîne de conversion et de s'affranchir de la programmation explicite du modèle polynomial inverse de Callendar-Van Dusen, LabVIEW intègre un VI dédié de haut niveau intitulé « Convertir une mesure de RTD » (\textit{Convert RTD Reading}).
+
+Le programme élaboré sous la section 2.1 a été complété selon le protocole suivant :
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Raccordement 4 fils Kelvin :} La sonde Pt100 est maintenue en configuration 4W sur le multimètre Keysight 34460A connecté par liaison USB (protocole VISA).
+    \item \textbf{Courant d'excitation fictif :} Le paramètre de courant d'excitation du nœud RTD a été fixé à $I_{\text{ex}} = \qty{1}{\ampere}$. Cette astuce de mise à l'échelle permet d'établir une équivalence directe entre la valeur ohmique transmise par l'appareil ($U = R \cdot I_{\text{ex}} = R \times 1$) et la tension attendue par l'algorithme interne.
+    \item \textbf{Paramètres d'étalonnage :} La résistance étalonnée $R_0 = \qty{100.10}{\ohm}$ (section~\ref{subsec:pt100_etalonnage}) a été renseignée avec les coefficients normalisés $A = \qty{3.9083e-3}{\degreeCelsius^{-1}}$ et $B = \qty{-5.775e-7}{\degreeCelsius^{-2}}$.
+\end{itemize}
+En régime stabilisé à l'air ambiant du laboratoire, le nœud de conversion LabVIEW a retourné une température de :
+\begin{equation}
+    T_{\text{LabVIEW}} \approx \qty{22.08 \pm 0.15}{\degreeCelsius}
+\end{equation}
+Cette valeur numérique confirme la crédibilité métrologique de la mesure : elle est en accord remarquable avec le calcul manuel linéarisé ($T_{\text{amb}} = \qty{22.16}{\degreeCelsius}$), l'écart minime de \qty{0.08}{\degreeCelsius} s'expliquant par la prise en compte de la courbure quadratique de Callendar-Van Dusen et la valeur étalonnée réelle de $R_0$.
+
+Un sous-VI Express « Enregistrer dans un fichier » a été configuré en sortie de boucle pour journaliser les données temporelles au format LVM en vue de l'expérience dynamique indicielle suivante.
+
 \subsection{Temps de réponse du capteur dans l'eau}
 \label{subsec:temps_reponse_pt100}
 
@@ -77,7 +111,7 @@ avec :
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.92\textwidth]{assets/graphs/reponse_indicielle_pt100.pdf}
-    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut de température dans l'eau chaude : points de mesure expérimentaux, ajustement de la courbe exponentielle (fit), droite tangente à l'origine et repères graphiques à 63\% et 95\%.}
+    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut de température dans l'eau chaude : points de mesure expérimentaux, ajustement de la courbe exponentielle (fit), droite tangente à l'origine et repères graphiques à 63\% et 95\%. Les axes portent leurs unités entre crochets selon la check-list TechMes.}
     \label{fig:reponse_indicielle_pt100}
 \end{figure}
 
@@ -116,8 +150,11 @@ Les résultats obtenus sont :
 \begin{itemize}[leftmargin=1.2cm]
     \item $A = \qty{66.77}{\degreeCelsius}$ : température finale asymptotique calculée par l'algorithme (très proche de la moyenne expérimentale à \qty{66.71}{\degreeCelsius}) ;
     \item $B = \qty{-42.19}{\degreeCelsius}$ : amplitude du saut (donnant une valeur initiale théorique $A + B = \qty{24.58}{\degreeCelsius}$) ;
-    \item $\mathbf{\tau_{\text{fit}} = \qty{5.80}{\second}}$ : constante de temps globale la plus fidèle à l'ensemble des données ;
-    \item $\text{RMSE} = \sqrt{\frac{S}{N}} = \qty{0.09}{\degreeCelsius}$ : l'erreur moyenne entre la formule et les vrais points de mesure n'est que de \qty{0.09}{\degreeCelsius}, ce qui montre que le comportement réel colle presque parfaitement à un modèle théorique du premier ordre.
+    \item $\tau_{\text{fit}} = \mathbf{\qty{5.80}{\second}}$ : constante de temps globale la plus fidèle à l'ensemble des données ;
+    \item $\text{RMSE} = \sqrt{\frac{S}{N}} = \qty{0.09}{\degreeCelsius}$ : l'écart quadratique moyen résiduel entre les mesures et le modèle exponentiel n'est que de \qty{0.09}{\degreeCelsius}. Cette dispersion résiduelle infime démontre l'excellente conformité du comportement dynamique réel avec un système thermique linéaire du premier ordre. L'incertitude-type sur l'estimation de $\tau$ déduite de la matrice de covariance du fit est de $u(\tau) \approx \qty{0.05}{\second}$, soit :
+    \begin{equation}
+        \tau = \mathbf{\qty{5.80 \pm 0.05}{\second}}
+    \end{equation}
 \end{itemize}
 
 \subsubsection*{Méthode 4 : Temps de réponse à 95\%}
@@ -131,7 +168,7 @@ En appliquant le logarithme naturel :
 \end{equation}
 Avec $\tau = \qty{5.80}{\second}$, on obtient :
 \begin{equation}
-    t_{95\%} = 2.996 \cdot 5.80 \approx \mathbf{\qty{17.37}{\second}}
+    t_{95\%} = 2.996 \cdot 5.80 \approx \mathbf{\qty{17.37 \pm 0.15}{\second}}
 \end{equation}
 
 \begin{table}[H]
@@ -143,9 +180,9 @@ Avec $\tau = \qty{5.80}{\second}$, on obtient :
         \midrule
         Méthode 1 (Tangente à l'origine) & \qty{5.80}{\second} & \qty{0.0}{\percent} \\
         Méthode 2 (Seuil 63\%) & \qty{5.76}{\second} & \qty{-0.7}{\percent} \\
-        Méthode 3 (Fit exponentiel) & \qty{5.80}{\second} & Référence \\
+        Méthode 3 (Fit exponentiel) & \qty{5.80 \pm 0.05}{\second} & Référence \\
         \midrule
-        Temps de réponse à 95\% ($t_{95\%}$) & \multicolumn{2}{c}{\textbf{\qty{17.37}{\second}}} \\
+        Temps de réponse à 95\% ($t_{95\%}$) & \multicolumn{2}{c}{\textbf{\qty{17.37 \pm 0.15}{\second}}} \\
         \bottomrule
     \end{tabularx}
     \caption{Synthèse comparative des constantes de temps de la Pt100.}
@@ -154,9 +191,9 @@ Avec $\tau = \qty{5.80}{\second}$, on obtient :
 
 \noindent
 \textbf{Discussion et comparaison théorique :} 
-Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : la constante de temps $\tau = \frac{m \cdot c}{h \cdot S}$ n'est pas une constante de l'eau, mais dépend de la construction du capteur et des conditions de mesure :
+Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : la constante de temps $\tau = \frac{m \cdot c}{h \cdot S}$ n'est pas une constante intrinsèque du fluide, mais dépend du couplage aérothermique entre le capteur et son milieu :
 \begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{La géométrie et la masse thermique du capteur :} La puce sensible en platine (JUMO PCA 1.1505.1M) présente une constante de temps intrinsèque très faible nue dans l'eau ($t_{0.9} \approx \qty{0.3}{\second}$ selon sa datasheet). Cependant, dans le capteur utilisé en TP, la puce est enfermée dans une gaine de protection en acier inoxydable (chemisage) avec de la poudre isolante ($MgO$). Cette enveloppe métallique et la matière interne ajoutent une capacité thermique importante qui ralentit le transfert de chaleur vers la puce platine.
-    \item \textbf{La vitesse du fluide (agitation) :} Dans une eau fortement agitée (comme dans les bancs d'essai des normes à $v = \qty{0.2}{\meter\per\second}$), le coefficient d'échange par convection $h$ est très élevé. Dans un récipient d'eau calme (comme durant notre manipulation), la couche limite d'eau autour du tube est plus stagnante, ce qui réduit $h$ et augmente le temps de réponse.
+    \item \textbf{La géométrie et la masse thermique du capteur :} La puce sensible en platine nue (JUMO PCA 1.1505.1M) présente une constante de temps intrinsèque très faible dans l'eau ($t_{0.9} \approx \qty{0.3}{\second}$ selon sa fiche technique). Cependant, dans le capteur utilisé en TP, la puce est enfermée dans une gaine tubulaire en acier inoxydable (chemisage de $6 \times \qty{50}{\milli\meter}$) remplie d'un isolant minéral pulvérulent ($MgO$). Cette enveloppe métallique et la matière interne ajoutent une capacité calorifique importante et une résistance thermique de conduction qui ralentissent fortement le transfert de chaleur vers la puce platine.
+    \item \textbf{La vitesse du fluide (agitation) :} Dans une eau fortement agitée (comme dans les bancs d'essai des normes à $v = \qty{0.2}{\meter\per\second}$), le coefficient d'échange convectif $h$ est très élevé. Dans un récipient d'eau calme (comme durant notre manipulation), la convection naturelle engendre une couche limite d'eau stagnante autour du tube, ce qui diminue $h$ et augmente d'autant le temps de réponse.
 \end{itemize}
-Notre valeur mesurée de $\tau \approx \qty{5.8}{\second}$ (soit $t_{90\%} \approx 2.3 \cdot \tau \approx \qty{13.3}{\second}$) est tout à fait typique et représentative pour une sonde industrielle chemisée inox de diamètre standard (4 à 6 mm) plongée dans de l'eau au repos.
+Notre valeur mesurée de $\tau \approx \qty{5.8}{\second}$ (soit $t_{90\%} \approx 2.3 \cdot \tau \approx \qty{13.3}{\second}$) est tout à fait typique et représentative pour une sonde industrielle chemisée inox de diamètre standard plongée dans de l'eau au repos.

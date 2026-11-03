@@ -2,23 +2,46 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
 
-\section{Objectifs}
+Ce laboratoire a permis de confronter expérimentalement et de modéliser avec rigueur les caractéristiques statiques et dynamiques de deux capteurs thermorésistifs emblématiques : la thermistance CTN et la résistance de platine RTD Pt100.
+
+\section{Validation des objectifs}
+\label{sec:conclusion_objectifs}
+
+L'ensemble des objectifs fixés au chapitre~\ref{chap:introduction} a été mené à terme avec succès. Le tableau~\ref{tab:objectifs} récapitule l'état d'accomplissement de chaque étape métrologique du laboratoire.
 
 \begin{table}[H]
   \centering
   \small
-  \begin{tabular}{p{9.5cm}c}
+  \begin{tabularx}{\textwidth}{X c}
     \toprule
-    Objectif & État \\
+    \textbf{Objectif métrologique} & \textbf{État de validation} \\
     \midrule
-    {[Objectif 1]} & [fait / à faire] \\
-    {[Objectif 2]} & [fait / à faire] \\
+    1. Mesure manuelle de la CTN SEMI833-ET, calcul de $T_{\text{amb}} = \qty{21.54 \pm 0.80}{\degreeCelsius}$ et dimensionnement du pont diviseur avec vérification de l'auto-échauffement ($\Delta T \approx \qty{0.09}{\degreeCelsius}$) & Validé \\
+    \addlinespace[3pt]
+    2. Implémentation de la chaîne d'acquisition sous LabVIEW (carte NI PCIe-6321) avec linéarisation par table de conversion et analyse de l'effet du suréchantillonnage & Validé \\
+    \addlinespace[3pt]
+    3. Étalonnage à basse température au puits d'étalonnage sec Fluke 9103 et détermination de la résistance étalonnée individuelle $R_0 = \qty{100.10 \pm 0.03}{\ohm}$ & Validé \\
+    \addlinespace[3pt]
+    4. Comparaison des raccordements 2 fils (2W) et 4 fils (4W) et quantification de l'erreur systématique de ligne ($2 R_L = \qty{0.09}{\ohm} \implies \Delta T = \qty{+0.23}{\degreeCelsius}$) & Validé \\
+    \addlinespace[3pt]
+    5. Caractérisation dynamique de la réponse indicielle dans l'eau, validation du modèle de premier ordre ($\text{RMSE} = \qty{0.09}{\degreeCelsius}$) et détermination de $\tau = \qty{5.80 \pm 0.05}{\second}$ et $t_{95\%} = \qty{17.37 \pm 0.15}{\second}$ & Validé \\
+    \addlinespace[3pt]
+    6. Analyse quantitative des incertitudes et validation du test de compatibilité métrologique entre CTN et Pt100 ($C = 0.76 \le 2 \implies$ accord statistique à \qty{95}{\percent}) & Validé \\
     \bottomrule
-  \end{tabular}
-  \caption{Validation des objectifs du laboratoire}
+  \end{tabularx}
+  \caption{Tableau de validation des objectifs du laboratoire.}
   \label{tab:objectifs}
 \end{table}
 
-\section{Synthèse}
+\section{Synthèse métrologique et enseignements majeurs}
+\label{sec:conclusion_synthese}
 
-[Bilan final : que retenir de ce laboratoire ? Résumé concis des constats majeurs.]
+Les enseignements techniques fondamentaux tirés de ce laboratoire sont les suivants :
+\begin{enumerate}[leftmargin=1.2cm]
+    \item \textbf{Adéquation technologique CTN vs RTD :} La thermistance CTN offre une sensibilité brute très élevée ($\approx \qty{4.2}{\kilo\ohm\per\degreeCelsius}$ à température ambiante), ce qui facilite son acquisition sans étage d'amplification lourd. En contrepartie, son interchangeabilité sans étalonnage individuel est limitée ($\pm \qty{0.8}{\degreeCelsius}$) et sa forte non-linéarité impose une correction logicielle par interpolation polynomiale. À l'inverse, la Pt100 présente une sensibilité plus faible ($\qty{0.385}{\ohm\per\degreeCelsius}$) mais une linéarité naturelle exceptionnelle et une précision de classe A ($\pm \qty{0.15}{\degreeCelsius}$), idéale pour l'instrumentation industrielle étalonnée.
+    \item \textbf{Primauté du raccordement 4 fils Kelvin :} L'étalonnage au puits sec a prouvé qu'un câble de liaison standard de \qty{1}{\meter} fausse la mesure en mode 2 fils de \qty{+0.23}{\degreeCelsius}. Le montage 4 fils est donc strictement indispensable pour préserver la précision intrinsèque d'un capteur platine de faible résistance nominale (\qty{100}{\ohm}).
+    \item \textbf{Maîtrise de l'auto-échauffement :} Le dimensionnement du pont diviseur de la CTN avec une résistance série de forte valeur ($R \approx \qty{462}{\kilo\ohm}$) limite la puissance dissipée par effet Joule à seulement \qty{0.061}{\milli\watt}, confinant l'auto-échauffement interne à \qty{0.09}{\degreeCelsius}, soit un niveau d'erreur négligeable.
+    \item \textbf{Filtrage numérique et réalité physique :} Le suréchantillonnage moyenné sous LabVIEW procure un lissage électronique remarquable du signal numérisé (gain théorique d'un facteur 10 sur le bruit blanc ADC). Néanmoins, dans une mesure aéraulique réelle (jet de sèche-cheveux), la variance résiduelle ($\sigma \approx \qty{3}{\degreeCelsius}$) et le décalage moyen entre séries sont dominés par les turbulences convectives du fluide et l'absence de répétabilité géométrique d'une tenue manuelle sans support fixe.
+    \item \textbf{Dynamique thermique du premier ordre :} L'immersion indicielle de la Pt100 dans l'eau chaude confirme avec une rigueur mathématique éclatante le modèle thermique du premier ordre ($\text{RMSE} = \qty{0.09}{\degreeCelsius}$). La constante de temps obtenue ($\tau = \qty{5.80}{\second}$) est principalement dictée par la masse thermique du chemisage de protection en acier inoxydable et de la poudre isolante de magnésie ($MgO$).
+\end{enumerate}
+En conclusion, l'ensemble des manipulations a mis en pratique avec succès les règles fondamentales de la chaîne métrologique, du conditionnement matériel au traitement logiciel du signal et à l'estimation rigoureuse des incertitudes de mesure.

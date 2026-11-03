@@ -2,8 +2,173 @@
 \chapter{Théorie}
 \label{chap:theorie}
 
-[Développement théorique, formules principales et démonstrations nécessaires à la compréhension du rapport.]
+Ce chapitre présente les fondements physiques et mathématiques régissant le comportement des deux types de capteurs étudiés (CTN et Pt100), le principe du pont diviseur, le montage quatre fils Kelvin, ainsi que le modèle dynamique de transfert thermique conduisant à la réponse indicielle du premier ordre.
 
-\section{Modèle théorique}
+\section{Modèle physique et électrique de la thermistance CTN}
+\label{sec:theorie_ntc}
 
-[Formules]
+Une thermistance CTN (\textit{Negative Temperature Coefficient}) est un composant semi-conducteur polycristallin constitué d'oxydes de métaux de transition (manganèse, nickel, cobalt). Sa résistivité électrique diminue très fortement et de manière non-linéaire lorsque la température augmente.
+
+\subsection*{Loi de résistance en fonction de la température}
+Le comportement de la résistance en fonction de la température absolue $T$ [K] est traditionnellement décrit par la relation de Steinhart-Hart ou par la forme simplifiée à un paramètre $B$ :
+\begin{equation}
+    R(T) = R_0 \cdot \exp\left( B \left( \frac{1}{T} - \frac{1}{T_0} \right) \right)
+    \label{eq:steinhart_b}
+\end{equation}
+où $R_0$ est la résistance nominale à la température de référence $T_0 = \qty{293.15}{\kelvin}$ (\qty{20}{\degreeCelsius}) et $B$ est l'énergie thermique d'activation caractéristique du matériau [K]. 
+
+En pratique industrielle et en laboratoire, les constructeurs fournissent une table d'étalonnage discrète à pas fin (datasheet SEMI833-ET). Pour de faibles variations de température autour d'un point de fonctionnement, la caractéristique est approchée par une régression linéaire locale :
+\begin{equation}
+    R(T) \approx R(T_{\text{ref}}) - p_{\text{moy}} \cdot (T - T_{\text{ref}})
+\end{equation}
+où $p_{\text{moy}} = -\frac{\Delta R}{\Delta T}$ représente la sensibilité locale absolue en [\unit{\kilo\ohm\per\degreeCelsius}].
+
+\subsection*{Conditionnement par pont diviseur de tension}
+Pour convertir la variation de résistance $R_{NTC}$ en une tension analogique $U_{NTC}$ mesurable par un convertisseur analogique-numérique (carte NI PCIe-6321), la thermistance est insérée dans un pont diviseur alimenté par une tension continue stable $V_{CC}$ à travers une résistance série de précision $R$ :
+\begin{equation}
+    U_{NTC} = V_{CC} \cdot \frac{R_{NTC}}{R + R_{NTC}}
+    \label{eq:theorie_diviseur}
+\end{equation}
+La formule inverse permettant d'extraire la résistance du capteur à partir de la tension mesurée s'exprime par :
+\begin{equation}
+    R_{NTC} = \frac{R \cdot U_{NTC}}{V_{CC} - U_{NTC}}
+    \label{eq:theorie_rntc_inverse}
+\end{equation}
+
+\subsection*{Puissance dissipée et auto-échauffement par effet Joule}
+Le passage du courant de mesure $I = \frac{V_{CC}}{R + R_{NTC}}$ dissipe dans la perle thermistance une puissance électrique par effet Joule :
+\begin{equation}
+    P = U_{NTC} \cdot I = \frac{U_{NTC}^2}{R_{NTC}} = \frac{V_{CC}^2 \cdot R_{NTC}}{(R + R_{NTC})^2}
+    \label{eq:theorie_puissance}
+\end{equation}
+Cette puissance dissipée induit une élévation de température parasite du capteur par rapport au milieu environnant, appelée \textbf{auto-échauffement} :
+\begin{equation}
+    \Delta T_{\text{auto}} = \frac{P}{\delta}
+    \label{eq:theorie_auto_echauffement}
+\end{equation}
+où $\delta$ est le facteur de dissipation thermique du capteur [\unit{\milli\watt\per\degreeCelsius}]. Pour garantir la validité métrologique de la mesure, la résistance série $R$ doit être choisie suffisamment élevée pour que $\Delta T_{\text{auto}}$ demeure négligeable devant l'incertitude intrinsèque du capteur ($\Delta T_{\text{auto}} \ll \pm \qty{0.8}{\degreeCelsius}$).
+
+\section{Modèle physique et métrologique de la sonde RTD Pt100}
+\label{sec:theorie_pt100}
+
+La sonde RTD (\textit{Resistance Temperature Detector}) Pt100 utilise la variation de la résistance électrique d'un film mince de platine pur en fonction de la température. Le platine présente une inertie chimique remarquable, une grande stabilité temporelle et une reproductibilité normalisée à l'échelle internationale.
+
+\subsection*{Équation de Callendar-Van Dusen et approximation linéaire}
+Selon la norme internationale IEC 60751, la relation entre la résistance $R(T)$ [\unit{\ohm}] et la température $T$ [\unit{\degreeCelsius}] pour $T \ge \qty{0}{\degreeCelsius}$ est régie par le polynôme de Callendar-Van Dusen :
+\begin{equation}
+    R(T) = R_0 \cdot \big(1 + A\,T + B\,T^2\big)
+    \label{eq:callendar_van_dusen}
+\end{equation}
+avec $R_0 = \qty{100.00}{\ohm}$ à \qty{0}{\degreeCelsius}, $A = \qty{3.9083e-3}{\degreeCelsius^{-1}}$ et $B = \qty{-5.775e-7}{\degreeCelsius^{-2}}$.
+
+Le coefficient quadratique $B$ étant très faible ($|B| \ll A$), la caractéristique sur la plage $[0\,^\circ\text{C}\,;\,100\,^\circ\text{C}]$ est excellemment approchée par la relation linéaire standard :
+\begin{equation}
+    R(T) \approx R_0 \cdot (1 + \alpha\,T) \quad \text{avec } \alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}
+    \label{eq:theorie_pt100_lineaire}
+\end{equation}
+La sensibilité thermique nominale au voisinage de \qty{0}{\degreeCelsius} vaut donc :
+\begin{equation}
+    S = \frac{\mathrm{d}R}{\mathrm{d}T} = R_0 \cdot \alpha = 100.00 \cdot 3.850 \cdot 10^{-3} = \qty{0.3850}{\ohm\per\degreeCelsius}
+\end{equation}
+La température se déduit directement de la résistance mesurée par la relation inverse :
+\begin{equation}
+    T = \frac{R(T) - R_0}{R_0 \cdot \alpha}
+    \label{eq:theorie_t_pt100}
+\end{equation}
+
+\subsection*{Principe de la mesure 4 fils Kelvin contre la mesure 2 fils}
+La résistance nominale d'une Pt100 n'étant que de \qty{100}{\ohm}, la résistance ohmique des conducteurs de raccordement du câble peut biaiser considérablement la mesure :
+\begin{itemize}[leftmargin=1.2cm]
+    \item \textbf{Montage deux fils (2W) :} Le courant de mesure $I$ et la lecture de la tension $U$ partagent les deux mêmes conducteurs. La résistance mesurée par l'ohmmètre vaut :
+    \begin{equation}
+        R_{\text{mes, 2W}} = R_{\text{Pt100}} + 2 \cdot R_{\text{ligne}}
+    \end{equation}
+    Chaque dixième d'ohm dans la ligne introduit un biais systématique positif important :
+    \begin{equation}
+        \Delta T = \frac{2 \cdot R_{\text{ligne}}}{S} = \frac{2 \cdot R_{\text{ligne}}}{\qty{0.385}{\ohm\per\degreeCelsius}}
+    \end{equation}
+    Pour $2 R_{\text{ligne}} \approx \qty{0.09}{\ohm}$, l'erreur induite s'élève à $\Delta T \approx +\qty{0.23}{\degreeCelsius}$.
+    \item \textbf{Montage quatre fils Kelvin (4W) :} Deux conducteurs (bornes \textit{Force}) injectent un courant de mesure constant $I_{\text{inj}} \le \qty{1}{\milli\ampere}$, tandis que deux autres conducteurs indépendants (bornes \textit{Sense}) sont connectés directement aux bornes de l'élément sensible pour mesurer la tension $U$. L'impédance d'entrée du voltmètre étant quasi infinie ($R_{\text{in}} > \qty{10}{\giga\ohm}$), le courant circulant dans les lignes de détection est rigoureusement nul :
+    \begin{equation}
+        I_{\text{sense}} \approx 0 \quad \implies \quad \Delta U_{\text{ligne}} = R_{\text{ligne}} \cdot I_{\text{sense}} = 0
+    \end{equation}
+    La tension mesurée correspond strictement à $U = R_{\text{Pt100}} \cdot I_{\text{inj}}$. L'erreur de ligne est totalement annulée.
+\end{itemize}
+
+\section{Modèle de transfert thermique dynamique (système du premier ordre)}
+\label{sec:theorie_dynamique}
+
+Lorsqu'une sonde de température est soumise à une variation brutale de la température de son environnement fluide (échelon thermique de $T_0$ à $T_\infty$), le transfert de chaleur vers l'élément sensible est gouverné par le bilan d'énergie thermique.
+
+\subsection*{Bilan thermique et équation différentielle}
+Sous l'hypothèse d'une température spatiale uniforme au sein du capteur (hypothèse des corps minces / nombre de Biot $\text{Bi} = \frac{h\,L_c}{\lambda} < 0.1$), la variation temporelle de l'énergie thermique interne de la sonde s'équilibre avec le flux de chaleur échangé par convection superficielle avec le fluide :
+\begin{equation}
+    \frac{\mathrm{d}E}{\mathrm{d}t} = m \cdot c \cdot \frac{\mathrm{d}T(t)}{\mathrm{d}t} = \Phi_{\text{convection}}(t) = h \cdot S \cdot \big(T_\infty - T(t)\big)
+    \label{eq:bilan_thermique}
+\end{equation}
+où :
+\begin{itemize}[leftmargin=1.2cm]
+    \item $m$ est la masse du capteur [\unit{\kilo\gram}] ;
+    \item $c$ est la capacité thermique massique [\unit{\joule\per\kilo\gram\per\kelvin}] ;
+    \item $C_{\text{th}} = m \cdot c$ est la capacité calorifique globale de la sonde [\unit{\joule\per\kelvin}] ;
+    \item $h$ est le coefficient de transfert thermique par convection [\unit{\watt\per\meter\squared\per\kelvin}] ;
+    \item $S$ est la surface d'échange externe de la sonde [\unit{\meter\squared}].
+\end{itemize}
+
+En réarrangeant l'équation~\eqref{eq:bilan_thermique}, on obtient la forme canonique de l'équation différentielle linéaire du premier ordre :
+\begin{equation}
+    \tau \cdot \frac{\mathrm{d}T(t)}{\mathrm{d}t} + T(t) = T_\infty
+    \label{eq:equa_diff_1er_ordre}
+\end{equation}
+avec la constante de temps thermique $\tau$ définie par :
+\begin{equation}
+    \tau = \frac{m \cdot c}{h \cdot S} = \frac{C_{\text{th}}}{G_{\text{th}}}
+    \label{eq:formule_tau}
+\end{equation}
+où $G_{\text{th}} = h \cdot S$ représente la conductance thermique d'échange fluide-solide.
+
+\subsection*{Réponse indicielle à un échelon de température}
+Pour une condition initiale $T(0) = T_0$, la solution analytique exacte de l'équation différentielle~\eqref{eq:equa_diff_1er_ordre} s'écrit :
+\begin{equation}
+    T(t) = T_\infty - (T_\infty - T_0) \cdot e^{-t/\tau}
+    \label{eq:theorie_reponse_indicielle}
+\end{equation}
+Cette réponse indicielle possède des propriétés remarquables exploitées expérimentalement :
+\begin{enumerate}[leftmargin=1.2cm]
+    \item \textbf{Pente de la tangente à l'origine :}
+    \begin{equation}
+        \left. \frac{\mathrm{d}T}{\mathrm{d}t} \right|_{t=0} = \frac{T_\infty - T_0}{\tau}
+    \end{equation}
+    L'intersection de la droite tangente en $t = 0$ avec l'asymptote horizontale $T = T_\infty$ a pour abscisse exacte $t = \tau$.
+    \item \textbf{Seuil à \qty{63.2}{\percent} de l'amplitude du saut :}
+    Au temps $t = \tau$, la fraction parcourue du saut total est :
+    \begin{equation}
+        \frac{T(\tau) - T_0}{T_\infty - T_0} = 1 - e^{-1} \approx 0.6321 \quad (\qty{63.2}{\percent})
+    \end{equation}
+    \item \textbf{Temps de réponse à \qty{95}{\percent} ($t_{95\%}$) :}
+    Le temps nécessaire pour que l'écart résiduel atteigne moins de \qty{5}{\percent} du saut total satisfait :
+    \begin{equation}
+        1 - e^{-t_{95\%}/\tau} = 0.95 \quad \implies \quad t_{95\%} = -\ln(0.05) \cdot \tau \approx 2.996 \cdot \tau \approx 3 \cdot \tau
+        \label{eq:theorie_t95}
+    \end{equation}
+\end{enumerate}
+
+\section{Réduction du bruit par suréchantillonnage (\textit{oversampling})}
+\label{sec:theorie_oversampling}
+
+Lors de l'acquisition analogique-numérique d'une tension continue ou lentement variable, le signal est perturbé par le bruit de quantification de l'ADC et le bruit thermique de l'étage d'entrée. 
+
+Si l'on acquiert $n$ échantillons successifs entachés d'un bruit blanc centré de variance $\sigma_0^2$ et que l'on effectue leur moyenne arithmétique :
+\begin{equation}
+    \bar{U} = \frac{1}{n} \sum_{i=1}^{n} U_i
+\end{equation}
+la variance de la moyenne arithmétique est réduite par le théorème central limite d'un facteur $n$ :
+\begin{equation}
+    \sigma_{\bar{U}}^2 = \frac{\sigma_0^2}{n} \quad \implies \quad \sigma_{\bar{U}} = \frac{\sigma_0}{\sqrt{n}}
+    \label{eq:theorie_reduction_bruit}
+\end{equation}
+Le gain sur le rapport signal sur bruit s'exprime en bits effectifs de résolution supplémentaires (\textit{ENOB}) par :
+\begin{equation}
+    \Delta \text{ENOB} = \frac{1}{2} \log_2(n) = \log_4(n)
+\end{equation}
+Pour un paquet de $n = 100$ échantillons moyennés (comme mis en œuvre au laboratoire), le bruit de mesure électronique est divisé par $\sqrt{100} = 10$, offrant un gain théorique de résolution de $\approx \qty{3.32}{\text{bits}}$.

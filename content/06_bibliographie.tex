@@ -2,9 +2,30 @@
 \chapter{Bibliographie}
 \label{sec:bibliographie}
 
-\section{Sources utilisées}
+\section{Sources et références documentaires}
 
-\begin{enumerate}[leftmargin=1cm,label=\arabic*)]
-\item \boldtext{[Nom du document ou Livre]} :
-[Description de l'utilisation de cette source].
+\begin{enumerate}[leftmargin=1.2cm,label=\arabic*)]
+    \item \boldtext{Notice de laboratoire TechMes (D. Maillefer) :} \\
+    Didier Maillefer, \textit{Techniques de mesure (TechMes) -- Travaux pratiques de laboratoire, Labo 3 : Mesure de température}, Haute École d'Ingénierie et de Gestion du Canton de Vaud (HEIG-VD), Département TIN, septembre 2024. \\
+    \textit{Utilisation :} Définition des protocoles expérimentaux, schémas de câblage du pont diviseur, paramètres nominaux et directives d'acquisition sous LabVIEW.
+
+    \item \boldtext{Polycopié de cours et check-list TechMes (Prof. L. P. Jolissaint de Sepibus) :} \\
+    Prof. Laurent P. Jolissaint de Sepibus, \textit{Check-list pour le rendu des rapports du laboratoire de techniques de mesures (TECHMES) et polycopié de cours de métrologie}, HEIG-VD, février 2022. \\
+    \textit{Utilisation :} Méthodologie rigoureuse de calcul d'incertitude (loi de propagation, incertitude sur la moyenne), critère de compatibilité métrologique ($C$), et conformité typographique des unités et figures.
+
+    \item \boldtext{Fiche technique CTN SEMI833-ET :} \\
+    Measurement Specialties / TE Connectivity, \textit{Datasheet SEMI833-ET Medical NTC Probe}, table de référence nominale résistance-température (\texttt{Echelle\_SEMI833.lvm}), 2020. \\
+    \textit{Utilisation :} Table nominale de conversion résistance-température ($R_{20} = \qty{103.6}{\kilo\ohm}$), tolérance de fabrication sans étalonnage ($\pm \qty{0.8}{\degreeCelsius}$) et constante de dissipation thermique en air calme ($\delta \approx \qty{0.7}{\milli\watt\per\degreeCelsius}$).
+
+    \item \boldtext{Fiche technique capteur KP chemisé inox (TITEC / Sensorshop24) :} \\
+    TITEC Temperaturmesstechnik GmbH / Otom Group GmbH, \textit{Datenblatt: Kabelfühler KS / KP / KG / KT (Kabelfühler mit Edelstahl-Schutzhülse)}, Donaueschingen/Bräunlingen, 2014. \\
+    \textit{Utilisation :} Caractéristiques géométriques du chemisage inox ($6 \times \qty{50}{\milli\meter}$), spécifications des conducteurs de raccordement, et prescriptions de câblage 2 fils et 4 fils Kelvin.
+
+    \item \boldtext{Note technique JUMO RTD Pt100 (PCA 1.1505.1M) :} \\
+    JUMO GmbH \& Co. KG, \textit{Technical Note / Datasheet PCA 1.1505.1M Platinum Temperature Sensors with Solder Connection}, Fulda, Allemagne. \\
+    \textit{Utilisation :} Caractéristiques de la puce couche mince de platine, temps de réponse intrinsèque dans l'eau ($t_{0.9} \approx \qty{0.3}{\second}$) et coefficients polynomiaux $A$ et $B$.
+
+    \item \boldtext{Norme internationale IEC 60751 (CEI/IEC) :} \\
+    Commission Électrotechnique Internationale, \textit{Norme IEC 60751:2008 -- Thermomètres industriels à résistance de platine et capteurs thermométriques en platine}, Genève, Suisse, 2008. \\
+    \textit{Utilisation :} Équation de Callendar-Van Dusen, coefficient de sensibilité $\alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}$, et spécification des tolérances de classe A ($\Delta T = \pm (0.15 + 0.002 |T|)\,^\circ\text{C}$).
 \end{enumerate}
