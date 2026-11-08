@@ -4,139 +4,59 @@
 \subsection{Mesure de la température ambiante par le multimètre}
 \label{subsec:pt100_ambiante}
 
-La sonde Pt100 industrielle (type KP chemisée en acier inoxydable, câble de \qty{1}{\meter}) a été connectée au multimètre de table Keysight 34460A réglé en résolution maximale (6½ digits) afin d'enregistrer la température ambiante du laboratoire.
-
-Les mesures de résistance obtenues à l'air ambiant sont :
-\begin{itemize}[leftmargin=1.2cm]
+La sonde Pt100 industrielle (modèle KP chemisée inox, câble de \qty{1}{\meter}) a été mesurée au multimètre Keysight 34460A (6½ digits) à l'air ambiant :
+\begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt]
     \item En mode 4 fils (4W) : $R_{\text{Pt100, 4W}} = \qty{108.530}{\ohm}$ ;
     \item En mode 2 fils (2W) : $R_{\text{Pt100, 2W}} = \qty{108.408}{\ohm}$.
 \end{itemize}
-
-\noindent
-\textbf{Remarque métrologique sur l'air ambiant :} \\
-On observe que la résistance mesurée en 2W est très légèrement inférieure à celle en 4W ($\Delta R \approx \qty{-0.12}{\ohm}$, équivalant à un écart de température de $\approx \qty{0.3}{\degreeCelsius}$). Dans l'air libre non régulé du laboratoire, de légères fluctuations thermiques ambiantes ainsi que la manipulation de la sonde entre les deux séries indépendantes de mesure expliquent cette infime dérive temporelle. C'est uniquement lors de l'immersion dans le bloc d'étalonnage thermostatisé Fluke 9103 parfaitement stable à \qty{0}{\degreeCelsius} (section~\ref{subsec:pt100_etalonnage}) que l'effet propre de la résistance des fils de liaison a pu être rigoureusement isolé ($R_{\text{2W}} - R_{\text{4W}} = \qty{0.09}{\ohm}$).
-
-En appliquant le modèle linéarisé spécifié dans la donnée pour la plage $[0\,^\circ\text{C}\,;\,100\,^\circ\text{C}]$ :
+En appliquant le modèle linéarisé ($R_0 = \qty{100.00}{\ohm}$, $\alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}$, sensibilité $S = \qty{0.3850}{\ohm\per\degreeCelsius}$), la température ambiante déduite en 4W vaut :
 \begin{equation}
-    R(T) = R_0 \cdot (1 + \alpha T) \quad \text{avec } R_0 = \qty{100.00}{\ohm} \text{ et } \alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}
+    T_{\text{amb}} = \frac{R_{\text{Pt100, 4W}} - R_0}{R_0 \cdot \alpha} = \frac{108.530 - 100.00}{0.3850} = \mathbf{\qty{22.16 \pm 0.15}{\degreeCelsius}}
 \end{equation}
-La sensibilité nominale de la sonde autour de \qty{0}{\degreeCelsius} vaut $R_0 \cdot \alpha = 100.00 \cdot 3.850 \cdot 10^{-3} = \qty{0.3850}{\ohm\per\degreeCelsius}$.
-
-On en déduit la température ambiante déduite de la mesure en 4 fils :
-\begin{equation}
-    T_{\text{amb}} = \frac{R_{\text{Pt100, 4W}} - R_0}{R_0 \cdot \alpha} = \frac{108.530 - 100.00}{0.3850} = \qty{22.16}{\degreeCelsius}
-\end{equation}
-
-\subsubsection*{Estimation de l'incertitude sur la mesure Pt100}
-Selon la norme internationale IEC 60751 régissant les thermomètres industriels à résistance de platine (classe de tolérance A pour les capteurs métrologiques chemisés tels que le modèle KP), l'écart maximal toléré à la température de mesure ($T \approx \qty{22}{\degreeCelsius}$) est donné par :
-\begin{equation}
-    \Delta T_{\text{tol}} = \pm (0.15 + 0.002 \cdot |T|) \approx \pm (0.15 + 0.002 \times 22.16) \approx \pm \qty{0.19}{\degreeCelsius}
-\end{equation}
-L'incertitude de lecture du multimètre Keysight 34460A en 4W étant inférieure à $\pm \qty{0.004}{\ohm}$ (soit $\pm \qty{0.01}{\degreeCelsius}$), l'incertitude de mesure est totalement dominée par la tolérance normalisée du capteur :
-\begin{equation}
-    T_{\text{amb, Pt100}} = \mathbf{\qty{22.16 \pm 0.15}{\degreeCelsius}} \quad \text{avec } u(T_{\text{amb, Pt100}}) = \qty{0.15}{\degreeCelsius}
-\end{equation}
+L'incertitude est régie par la classe A normalisée (CEI/IEC 60751 : $\pm (0.15 + 0.002 \cdot |T|) \approx \pm \qty{0.19}{\degreeCelsius}$ à \qty{22}{\degreeCelsius}, soit $\pm \qty{0.15}{\degreeCelsius}$ à $T \approx \qty{0}{\degreeCelsius}$), l'incertitude instrumentale du multimètre ($\pm \qty{0.01}{\degreeCelsius}$) étant négligeable.
 
 \subsection{Étalonnage à \qty{0}{\degreeCelsius} et comparaison 2 fils vs 4 fils}
 \label{subsec:pt100_etalonnage}
 
-L'étalonnage à basse température a été réalisé à l'aide d'un bloc d'étalonnage à sec (\textit{dry well}) FLUKE 9103 thermostatisé. La température de référence affichée par l'appareil d'étalonnage stabilisé était de \qty{-0.080}{\degreeCelsius}.
-
-Les valeurs mesurées au multimètre sont :
-\begin{itemize}[leftmargin=1.2cm]
-    \item Configuration 4 fils (4W) : $R_{\text{0, 4W}} = \mathbf{\qty{100.07}{\ohm}}$ (à \qty{-0.080}{\degreeCelsius}) ;
-    \item Configuration 2 fils (2W) : $R_{\text{0, 2W}} = \qty{100.16}{\ohm}$ (à \qty{-0.080}{\degreeCelsius}).
+L'étalonnage au puits sec thermostatisé Fluke 9103 stabilisé à \qty{-0.080}{\degreeCelsius} donne :
+\begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt]
+    \item Configuration 4W : $R_{\text{0, 4W}} = \qty{100.07}{\ohm}$ à \qty{-0.080}{\degreeCelsius} $\implies R_0 = 100.07 - (0.385 \times (-0.080)) = \mathbf{\qty{100.10 \pm 0.03}{\ohm}}$ ;
+    \item Configuration 2W : $R_{\text{0, 2W}} = \qty{100.16}{\ohm}$ à \qty{-0.080}{\degreeCelsius}.
 \end{itemize}
-
-En ramenant la mesure 4W exactement à \qty{0.00}{\degreeCelsius} via la pente de \qty{0.385}{\ohm\per\degreeCelsius} :
+L'écart mesuré entre les deux modes correspond à la résistance aller-retour des conducteurs du câble de \qty{1}{\meter} : $2 R_{\text{ligne}} = 100.16 - 100.07 = \qty{0.09}{\ohm}$. Cet écart induit une erreur systématique directe :
 \begin{equation}
-    R_0 = 100.07 - (0.385 \cdot (-0.080)) = 100.07 + 0.03 = \mathbf{\qty{100.10}{\ohm}}
+    \Delta T = \frac{2 R_{\text{ligne}}}{S} = \frac{\qty{0.09}{\ohm}}{\qty{0.385}{\ohm\per\degreeCelsius}} \approx \mathbf{\qty{+0.23}{\degreeCelsius}}
 \end{equation}
-Cette valeur étalonnée $R_0 = \qty{100.10}{\ohm}$ est ensuite utilisée comme paramètre dans le nœud de conversion LabVIEW au point 2.3.
-
-\subsubsection*{Comparaison et explication des différences entre 2 fils et 4 fils}
-La sonde utilisée en laboratoire possède un câble de liaison d'une longueur de \qty{1}{\meter} :
-\begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{En montage 2 fils (2W) :} Le multimètre utilise les deux mêmes conducteurs pour injecter le courant de mesure et pour mesurer la différence de potentiel. La résistance mesurée inclut donc en série la résistance propre de la sonde Pt100 et la résistance aller-retour des conducteurs du câble ($2 \cdot R_{\text{ligne}}$) :
-    \begin{equation}
-        R_{\text{lue, 2W}} = R_{\text{Pt100}} + 2 \cdot R_{\text{ligne}}
-    \end{equation}
-    À \qty{0}{\degreeCelsius}, la différence mesurée entre les deux modes est de $100.16 - 100.07 = \qty{0.09}{\ohm}$. Compte tenu de la sensibilité du platine ($\qty{0.385}{\ohm\per\degreeCelsius}$), cet écart de résistance de ligne introduit une erreur systématique directe :
-    \begin{equation}
-        \Delta T_{\text{erreur}} = \frac{\qty{0.09}{\ohm}}{\qty{0.385}{\ohm\per\degreeCelsius}} \approx \qty{0.23}{\degreeCelsius}
-    \end{equation}
-    \item \textbf{En montage 4 fils (4W) :} Deux conducteurs sont dédiés au passage du courant de mesure, tandis que deux autres conducteurs indépendants sont reliés à l'étage de mesure de tension du multimètre. L'impédance d'entrée du voltmètre étant extrêmement élevée ($> \qty{10}{\giga\ohm}$ sur le Keysight 34460A), le courant circulant dans les deux fils de prise de tension est quasi nul. Il n'y a donc aucune chute de tension ohmique ($R_{\text{ligne}} \cdot I \approx 0$) dans les fils de détection.
-\end{itemize}
-Le raccordement 4 fils élimine ainsi rigoureusement l'influence de la résistance du câble de \qty{1}{\meter} du capteur et des contacts, garantissant une mesure fidèle de la température.
+En mode 4W Kelvin, l'impédance d'entrée du voltmètre ($> \qty{10}{\giga\ohm}$) annule le courant dans les fils de tension : aucune chute de tension ohmique ne s'y produit, éliminant totalement l'erreur due au câble.
 
 \subsection{Mesure avec le nœud « convertir une mesure de RTD » sous LabVIEW}
 \label{subsec:pt100_labview_node}
 
-Afin d'automatiser la chaîne de conversion et de s'affranchir de la programmation explicite du modèle polynomial inverse de Callendar-Van Dusen, LabVIEW intègre un VI dédié de haut niveau intitulé « Convertir une mesure de RTD » (\textit{Convert RTD Reading}).
-
-Le programme élaboré sous la section 2.1 a été complété selon le protocole suivant :
-\begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{Raccordement 4 fils Kelvin :} La sonde Pt100 est maintenue en configuration 4W sur le multimètre Keysight 34460A connecté par liaison USB (protocole VISA).
-    \item \textbf{Courant d'excitation fictif :} Le paramètre de courant d'excitation du nœud RTD a été fixé à $I_{\text{ex}} = \qty{1}{\ampere}$. Cette astuce de mise à l'échelle permet d'établir une équivalence directe entre la valeur ohmique transmise par l'appareil ($U = R \cdot I_{\text{ex}} = R \times 1$) et la tension attendue par l'algorithme interne.
-    \item \textbf{Paramètres d'étalonnage :} La résistance étalonnée $R_0 = \qty{100.10}{\ohm}$ (section~\ref{subsec:pt100_etalonnage}) a été renseignée avec les coefficients normalisés $A = \qty{3.9083e-3}{\degreeCelsius^{-1}}$ et $B = \qty{-5.775e-7}{\degreeCelsius^{-2}}$.
-\end{itemize}
-En régime stabilisé à l'air ambiant du laboratoire, le nœud de conversion LabVIEW a retourné une température de :
+La conversion logicielle sous LabVIEW utilise le VI de haut niveau dédié configuré avec la sonde en 4W, un courant fictif $I_{\text{ex}} = \qty{1}{\ampere}$ (faisant correspondre ohms et volts) et la résistance étalonnée $R_0 = \qty{100.10}{\ohm}$. La température obtenue en régime stabilisé à l'ambiance est :
 \begin{equation}
-    T_{\text{LabVIEW}} \approx \qty{22.08 \pm 0.15}{\degreeCelsius}
+    T_{\text{LabVIEW}} \approx \mathbf{\qty{22.08 \pm 0.15}{\degreeCelsius}}
 \end{equation}
-Cette valeur numérique confirme la crédibilité métrologique de la mesure : elle est en accord remarquable avec le calcul manuel linéarisé ($T_{\text{amb}} = \qty{22.16}{\degreeCelsius}$), l'écart minime de \qty{0.08}{\degreeCelsius} s'expliquant par la prise en compte de la courbure quadratique de Callendar-Van Dusen et la valeur étalonnée réelle de $R_0$.
+Cette valeur concorde parfaitement avec le calcul manuel linéarisé ($T_{\text{amb}} = \qty{22.16}{\degreeCelsius}$), l'infime écart de \qty{0.08}{\degreeCelsius} provenant du polynôme de Callendar-Van Dusen d'ordre 2 et de la prise en compte du $R_0$ étalonné.
 
 \subsection{Temps de réponse du capteur dans l'eau}
 \label{subsec:temps_reponse_pt100}
 
-Afin de mesurer la dynamique du capteur Pt100 chemisé en inox, celui-ci a été brusquement plongé depuis l'air ambiant dans un récipient d'eau chaude. L'acquisition a été effectuée en mode quatre fils (4W) via LabVIEW.
-
-Les deux premières mesures prises avant l'entrée dans l'eau ont été retirées afin de placer le zéro de l'axe du temps ($t = \qty{0}{\second}$) au moment exact où la température commence à monter.
-
-Le comportement thermique du capteur est modélisé par une équation de premier ordre :
-\begin{equation}
-    T(t) = T_\infty - (T_\infty - T_0) \cdot \exp\left(-\frac{t}{\tau}\right)
-    \label{eq:premier_ordre}
-\end{equation}
-avec $T_0 = \qty{24.11}{\degreeCelsius}$ (température initiale), $T_\infty = \qty{66.71}{\degreeCelsius}$ (température finale stabilisée) et $\tau$ la constante de temps.
+La sonde Pt100 a été immergée brusquement de l'air ambiant dans un bécher d'eau chaude sous acquisition 4W. Les deux points précédant l'immersion ont été retirés pour caler l'origine temporelle ($t = \qty{0}{\second}$). Le saut thermique évolue de $T_0 = \qty{24.11}{\degreeCelsius}$ à $T_\infty = \qty{66.71}{\degreeCelsius}$.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.68\textwidth]{assets/graphs/reponse_indicielle_pt100.pdf}
-    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut de température dans l'eau chaude : points de mesure expérimentaux, fit exponentiel, tangente initiale et repères à 63\% et 95\%.}
+    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut dans l'eau chaude : points expérimentaux, ajustement exponentiel, tangente initiale et seuils à 63\% et 95\%.}
     \label{fig:reponse_indicielle_pt100}
 \end{figure}
 
-\subsubsection*{Méthode 1 : Tangente au démarrage de la montée}
-La droite tangente à la courbe en $t = \qty{0}{\second}$ a pour pente initiale $p = \frac{T_\infty - T_0}{\tau} \approx \qty{7.36}{\degreeCelsius\per\second}$. L'intersection avec l'asymptote $T_\infty$ donne directement :
-\begin{equation}
-    \tau_{\text{tan}} = \mathbf{\qty{5.80}{\second}}
-\end{equation}
-
-\subsubsection*{Méthode 2 : Seuil des 63\% de la montée totale}
-Pour une réponse du premier ordre, à $t = \tau$, la température a parcouru \qty{63.2}{\percent} du saut :
-\begin{equation}
-    T_{63\%} = T_0 + 0.632 \cdot (T_\infty - T_0) = 24.11 + 0.632 \cdot (66.71 - 24.11) = \qty{51.07}{\degreeCelsius}
-\end{equation}
-Dans le fichier de mesures, cette valeur est atteinte entre $t = \qty{5.51}{\second}$ (\qty{49.00}{\degreeCelsius}) et $t = \qty{5.92}{\second}$ (\qty{51.28}{\degreeCelsius}), soit par interpolation :
-\begin{equation}
-    \tau_{63\%} = \mathbf{\qty{5.76}{\second}}
-\end{equation}
-
-\subsubsection*{Méthode 3 : Ajustement exponentiel par moindres carrés (Fit)}
-Contrairement aux deux premières méthodes reposant sur un repérage visuel, l'ajustement mathématique (fit) utilise l'ensemble des 114 points mesurés pour déterminer le triplet $(A, B, \tau)$ du modèle $T(t) = A + B \cdot e^{-t/\tau}$ qui minimise la somme des carrés des écarts résiduels :
-\begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt,parsep=0pt]
-    \item $A = \qty{66.77}{\degreeCelsius}$ : température finale asymptotique (très proche de la moyenne finale à \qty{66.71}{\degreeCelsius}) ;
-    \item $B = \qty{-42.19}{\degreeCelsius}$ : amplitude du saut (donnant une valeur initiale $A + B = \qty{24.58}{\degreeCelsius}$) ;
-    \item \textbf{$\tau_{\text{fit}} = \qty{5.80 \pm 0.05}{\second}$} : constante de temps optimale sur l'ensemble des données ;
-    \item $\text{RMSE} = \qty{0.09}{\degreeCelsius}$ : l'écart quadratique moyen résiduel est infime, confirmant la conformité avec un premier ordre linéaire.
-\end{itemize}
-
-\subsubsection*{Méthode 4 : Temps de réponse à 95\%}
-Le temps nécessaire pour effectuer \qty{95}{\percent} du saut thermique total s'exprime par :
-\begin{equation}
-    t_{95\%} = -\ln(0.05) \cdot \tau \approx 2.996 \cdot \tau \approx \mathbf{\qty{17.37 \pm 0.15}{\second}}
-\end{equation}
+Quatre méthodes d'identification de la constante de temps $\tau$ ont été appliquées :
+\begin{enumerate}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt]
+    \item \textbf{Tangente à l'origine :} pente initiale $p = \frac{T_\infty - T_0}{\tau} \approx \qty{7.36}{\degreeCelsius\per\second} \implies \tau_{\text{tan}} = \mathbf{\qty{5.80}{\second}}$.
+    \item \textbf{Seuil des 63\% :} $T_{63\%} = 24.11 + 0.632 \cdot (66.71 - 24.11) = \qty{51.07}{\degreeCelsius} \implies \tau_{63\%} = \mathbf{\qty{5.76}{\second}}$.
+    \item \textbf{Fit exponentiel :} ajustement $T(t) = A + B \cdot e^{-t/\tau}$ sur les 114 points ($A = \qty{66.77}{\degreeCelsius}$, $B = \qty{-42.19}{\degreeCelsius}$) $\implies \tau_{\text{fit}} = \mathbf{\qty{5.80 \pm 0.05}{\second}}$ ($\text{RMSE} = \qty{0.09}{\degreeCelsius}$, accord parfait au 1er ordre).
+    \item \textbf{Temps de réponse à 95\% :} $t_{95\%} = -\ln(0.05) \cdot \tau \approx 3 \cdot \tau \implies t_{95\%} = \mathbf{\qty{17.37 \pm 0.15}{\second}}$.
+\end{enumerate}
 
 \begin{table}[H]
     \centering

@@ -2,18 +2,15 @@
 \chapter{Discussion générale}
 \label{chap:analyse}
 
-Ce chapitre synthétise l'ensemble des résultats obtenus, applique le critère de compatibilité métrologique entre les deux capteurs indépendants et analyse les principales sources d'erreurs expérimentales.
+\vspace{-12pt}
+Le tableau~\ref{tab:recap-labo} synthétise l'ensemble des grandeurs mesurées et leurs incertitudes estimées.
 
-\section{Récapitulatif des mesures}
-\label{sec:recap_resultats}
-
-Le tableau~\ref{tab:recap-labo} rassemble les grandeurs physiques mesurées avec leurs incertitudes estimées.
-
+\vspace{-6pt}
 \begin{table}[H]
   \centering
-  \footnotesize
-  \setlength{\tabcolsep}{3pt}
-  \renewcommand{\arraystretch}{1.1}
+  \scriptsize
+  \setlength{\tabcolsep}{2.5pt}
+  \renewcommand{\arraystretch}{0.95}
   \begin{tabularx}{\textwidth}{l >{\raggedright\arraybackslash}X c c c}
     \toprule
     \textbf{Dispositif} & \textbf{Grandeur} & \textbf{Résultat mesuré} & \textbf{Référence / Condition} & \textbf{Incertitude / Écart} \\
@@ -40,36 +37,22 @@ Le tableau~\ref{tab:recap-labo} rassemble les grandeurs physiques mesurées avec
   \label{tab:recap-labo}
 \end{table}
 
+\vspace{-10pt}
 \section{Compatibilité entre la mesure CTN et la mesure Pt100}
 \label{sec:compatibilite}
 
-Pour vérifier la cohérence des deux mesures indépendantes de la température ambiante du laboratoire :
-\begin{itemize}[leftmargin=1.2cm]
-    \item CTN : $T_{\text{amb, NTC}} = \qty{21.54 \pm 0.80}{\degreeCelsius}$ (incertitude dominée par la tolérance constructeur de $\pm \qty{0.8}{\degreeCelsius}$) ;
-    \item Pt100 : $T_{\text{amb, Pt100}} = \qty{22.16 \pm 0.15}{\degreeCelsius}$ (incertitude dominée par la classe A de $\pm \qty{0.15}{\degreeCelsius}$).
-\end{itemize}
-L'écart mesuré entre les deux capteurs est de :
+À l'ambiance, la CTN donne $T_{\text{amb, NTC}} = \qty{21.54 \pm 0.80}{\degreeCelsius}$ et la Pt100 donne $T_{\text{amb, Pt100}} = \qty{22.16 \pm 0.15}{\degreeCelsius}$ ($\Delta T = \qty{0.62}{\degreeCelsius}$). L'incertitude combinée vaut $u_c = \sqrt{0.80^2 + 0.15^2} \approx \qty{0.81}{\degreeCelsius}$, soit un critère de compatibilité normalisé :
 \begin{equation}
-    \Delta T = |21.54 - 22.16| = \qty{0.62}{\degreeCelsius}
+    C = \frac{\Delta T}{u_c} = \frac{0.62}{0.814} \approx \mathbf{0.76} \le 2
 \end{equation}
-L'incertitude combinée vaut :
-\begin{equation}
-    u_c = \sqrt{u_{\text{NTC}}^2 + u_{\text{Pt100}}^2} = \sqrt{0.80^2 + 0.15^2} \approx \qty{0.814}{\degreeCelsius}
-\end{equation}
-Le facteur de compatibilité normalisé est :
-\begin{equation}
-    C = \frac{\Delta T}{u_c} = \frac{0.62}{0.814} \approx \mathbf{0.76}
-\end{equation}
-Comme $C \le 2$, l'écart de \qty{0.62}{\degreeCelsius} est statistiquement justifié par les incertitudes de mesure. Les deux méthodes sont en parfait accord métrologique.
+Comme $C \le 2$, l'écart de \qty{0.62}{\degreeCelsius} est statistiquement justifié par les incertitudes : les deux capteurs sont en accord parfait.
 
+\vspace{-4pt}
 \section{Analyse des principales sources d'erreurs}
 \label{sec:sources_erreurs}
 
-L'analyse met en évidence trois sources d'erreurs majeures :
-\begin{enumerate}[leftmargin=1.2cm]
-    \item \textbf{Résistance de ligne en 2 fils sur la Pt100 ($+\qty{0.23}{\degreeCelsius}$) :} L'étalonnage à \qty{0}{\degreeCelsius} a montré que le câble de liaison de \qty{1}{\meter} ajoute une résistance de $2 R_{\text{ligne}} = 100.16 - 100.07 = \qty{0.09}{\ohm}$. Avec une sensibilité de $\qty{0.385}{\ohm\per\degreeCelsius}$, cela provoque une erreur systématique positive de $\Delta T = \qty{+0.23}{\degreeCelsius}$, supérieure à la tolérance de classe A ($\pm \qty{0.15}{\degreeCelsius}$). Le montage 4 fils Kelvin est donc indispensable dès que la sonde est déportée.
-    \item \textbf{Auto-échauffement de la CTN ($\approx \qty{0.09}{\degreeCelsius}$) :} Sous la tension de pont de \qty{14}{\volt} avec $R = \qty{462.35}{\kilo\ohm}$, la puissance dissipée dans la thermistance est d'environ \qty{0.061}{\milli\watt}. Avec un coefficient de dissipation thermique en air calme de $\delta \approx \qty{0.7}{\milli\watt\per\degreeCelsius}$, l'élévation interne de température est limitée à \qty{0.09}{\degreeCelsius}. Cette erreur représente environ \qty{11}{\percent} de la tolérance du capteur et valide le choix de la résistance série de \qty{470}{\kilo\ohm}.
-    \item \textbf{Turbulence du flux d'air et non-répétabilité manuelle au sèche-cheveux :} 
-    Le suréchantillonnage matériel (moyenne de 100 points) élimine efficacement le bruit haute fréquence de numérisation de la carte DAQ. Cependant, l'écart-type résiduel reste élevé ($\sigma \approx \qty{3}{\degreeCelsius}$) sur les deux séries. Cela montre que le bruit provient directement des tourbillons turbulents du jet d'air chaud et non de l'électronique.
-    De plus, le décalage de température moyenne entre les deux essais ($\approx \qty{1.7}{\degreeCelsius}$) s'explique par la tenue manuelle : le sèche-cheveux et la perle n'étaient pas fixés sur un banc rigide, ce qui entraîne de légères variations de position et de distance entre les mesures.
+\begin{enumerate}[leftmargin=1.0cm,topsep=1pt,itemsep=0.5pt,parsep=0pt]
+    \item \textbf{Résistance de ligne 2 fils sur la Pt100 ($+\qty{0.23}{\degreeCelsius}$) :} Le câble de \qty{1}{\meter} ajoute $2 R_{\text{ligne}} = \qty{0.09}{\ohm}$. Avec $S = \qty{0.385}{\ohm\per\degreeCelsius}$, cela provoque un biais systématique de $+\qty{0.23}{\degreeCelsius}$ (supérieur à la tolérance classe A de $\pm \qty{0.15}{\degreeCelsius}$), démontrant l'obligation du câblage 4 fils.
+    \item \textbf{Auto-échauffement CTN ($\approx \qty{0.09}{\degreeCelsius}$) :} Sous \qty{14}{\volt} avec $R = \qty{462.35}{\kilo\ohm}$, la puissance dissipée ($P = \qty{0.061}{\milli\watt}$) limite l'échauffement interne à $\Delta T \approx \qty{0.09}{\degreeCelsius}$ (\qty{11}{\percent} de la tolérance), validant le dimensionnement du pont.
+    \item \textbf{Turbulence du flux d'air et tenue manuelle :} Le suréchantillonnage élimine le bruit de numérisation, mais l'écart-type résiduel ($\sigma \approx \qty{3}{\degreeCelsius}$) est dominé par les tourbillons réels de l'air chaud. Le décalage moyen ($\approx \qty{1.7}{\degreeCelsius}$) s'explique par la tenue manuelle non guidée du sèche-cheveux et de la perle.
 \end{enumerate}
