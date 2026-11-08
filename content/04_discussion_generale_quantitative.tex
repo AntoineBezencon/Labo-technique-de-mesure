@@ -1,99 +1,75 @@
 % !TeX root = ../main.tex
-\chapter{Discussion générale quantitative}
+\chapter{Discussion générale}
 \label{chap:analyse}
 
-Ce chapitre dresse le bilan synthétique des résultats expérimentaux obtenus, applique le critère officiel de compatibilité métrologique entre les deux capteurs indépendants, et présente une analyse quantitative approfondie des sources d'erreurs systématiques et aléatoires.
+Ce chapitre synthétise l'ensemble des résultats obtenus, applique le critère de compatibilité métrologique entre les deux capteurs indépendants et analyse les principales sources d'erreurs expérimentales.
 
-\section{Récapitulatif des grandeurs mesurées}
+\section{Récapitulatif des mesures}
 \label{sec:recap_resultats}
 
-Le tableau~\ref{tab:recap-labo} rassemble l'ensemble des grandeurs physiques déterminées expérimentalement durant les travaux pratiques, accompagnées de leurs incertitudes-types estimées et de leurs valeurs de référence ou nominales.
+Le tableau~\ref{tab:recap-labo} rassemble les grandeurs physiques mesurées avec leurs incertitudes estimées.
 
 \begin{table}[H]
   \centering
-  \small
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \renewcommand{\arraystretch}{1.1}
   \begin{tabularx}{\textwidth}{l >{\raggedright\arraybackslash}X c c c}
     \toprule
-    \textbf{Dispositif} & \textbf{Grandeur déterminée} & \textbf{Résultat mesuré} & \textbf{Référence} & \textbf{Incertitude / Écart} \\
+    \textbf{Dispositif} & \textbf{Grandeur} & \textbf{Résultat mesuré} & \textbf{Référence / Condition} & \textbf{Incertitude / Écart} \\
     \midrule
-    \multirow{2}{*}{CTN SEMI833-ET} & Résistance ambiante $R_{\text{amb}}$ & \qty{97.20}{\kilo\ohm} & \qty{103.60}{\kilo\ohm} (\qty{20}{\degreeCelsius}) & Pente locale \\
-     & Température ambiante $T_{\text{amb, NTC}}$ & \qty{21.54 \pm 0.80}{\degreeCelsius} & -- & $u = \qty{0.80}{\degreeCelsius}$ \\
+    \multirow{2}{*}{CTN SEMI833} & Résistance ambiante $R_{\text{amb}}$ & \qty{97.20}{\kilo\ohm} & \qty{103.60}{\kilo\ohm} (\qty{20}{\degreeCelsius}) & Pente constructeur \\
+     & Température ambiante $T_{\text{amb, NTC}}$ & \qty{21.54 \pm 0.80}{\degreeCelsius} & -- & Tolérance $\pm \qty{0.8}{\degreeCelsius}$ \\
     \midrule
     \multirow{5}{*}{Pt100 KP (chemisée)} & Résistance 4W ambiante & \qty{108.530}{\ohm} & \qty{100.00}{\ohm} (\qty{0}{\degreeCelsius}) & Multimètre 6½ digits \\
-     & Température ambiante $T_{\text{amb, Pt100}}$ & \qty{22.16 \pm 0.15}{\degreeCelsius} & -- & $u = \qty{0.15}{\degreeCelsius}$ \\
-     & Température LabVIEW (nœud RTD) & \qty{22.08 \pm 0.15}{\degreeCelsius} & \qty{22.16}{\degreeCelsius} & Écart : \qty{-0.08}{\degreeCelsius} \\
-     & Résistance étalonnée $R_0$ (\qty{0.00}{\degreeCelsius}) & \qty{100.10 \pm 0.03}{\ohm} & \qty{100.00}{\ohm} & \qty{+0.10}{\ohm} (\qty{+0.10}{\percent}) \\
-     & Biais de ligne 2W ($2 R_{\text{ligne}}$) & \qty{0.09}{\ohm} & \qty{0.00}{\ohm} (4W) & $\Delta T = \qty{+0.23}{\degreeCelsius}$ \\
+     & Température ambiante $T_{\text{amb, Pt100}}$ & \qty{22.16 \pm 0.15}{\degreeCelsius} & -- & Tolérance classe A ($\pm \qty{0.15}{\degreeCelsius}$) \\
+     & Température LabVIEW & \qty{22.08 \pm 0.15}{\degreeCelsius} & \qty{22.16}{\degreeCelsius} & Écart : \qty{-0.08}{\degreeCelsius} \\
+     & Résistance étalonnée $R_0$ (\qty{0}{\degreeCelsius}) & \qty{100.10 \pm 0.03}{\ohm} & \qty{100.00}{\ohm} & Écart : \qty{+0.10}{\ohm} (\qty{+0.1}{\percent}) \\
+     & Biais de ligne 2W ($2 R_L$) & \qty{0.09}{\ohm} & \qty{0.00}{\ohm} (4W) & $\Delta T = \qty{+0.23}{\degreeCelsius}$ \\
     \midrule
-    \multirow{2}{*}{Dynamique Pt100 (eau)} & Constante de temps $\tau_{\text{fit}}$ & \qty{5.80 \pm 0.05}{\second} & \qty{5.80}{\second} (tan) & $\text{RMSE} = \qty{0.09}{\degreeCelsius}$ \\
-     & Temps de réponse à \qty{95}{\percent} ($t_{95\%}$) & \qty{17.37 \pm 0.15}{\second} & \qty{17.40}{\second} ($3\tau$) & Écart : \qty{-0.2}{\percent} \\
+    \multirow{2}{*}{Dynamique Pt100} & Constante de temps $\tau_{\text{fit}}$ & \qty{5.80 \pm 0.05}{\second} & \qty{5.80}{\second} (tangente) & $\text{RMSE} = \qty{0.09}{\degreeCelsius}$ \\
+     & Temps de réponse à \qty{95}{\percent} & \qty{17.37 \pm 0.15}{\second} & $3\tau = \qty{17.40}{\second}$ & Écart : \qty{-0.2}{\percent} \\
     \midrule
-    \multirow{2}{*}{Flux d'air CTN (global)} & Série standard ($N=520$) & \qty{40.56 \pm 0.17}{\degreeCelsius} & -- & $\sigma = \qty{3.96}{\degreeCelsius}$ \\
-     & Série suréchantillonnée ($N=375$) & \qty{41.90 \pm 0.25}{\degreeCelsius} & -- & $\sigma = \qty{4.75}{\degreeCelsius}$ \\
+    \multirow{2}{*}{Flux d'air CTN} & Palier standard ($N=497$) & \qty{41.13 \pm 0.13}{\degreeCelsius} & -- & Bruit : $\sigma = \qty{2.98}{\degreeCelsius}$ \\
+     & Palier suréchantillonné ($N=352$) & \qty{42.83 \pm 0.17}{\degreeCelsius} & -- & Bruit : $\sigma = \qty{3.15}{\degreeCelsius}$ \\
     \midrule
-    \multirow{2}{*}{Flux d'air CTN (stabilisé)} & Standard stabilisée ($N=497$) & \qty{41.13 \pm 0.13}{\degreeCelsius} & -- & $\sigma = \qty{2.98}{\degreeCelsius}$ \\
-     & Suréchantillonnée ($N=352$) & \qty{42.83 \pm 0.17}{\degreeCelsius} & -- & $\sigma = \qty{3.15}{\degreeCelsius}$ \\
-    \midrule
-    Auto-échauffement CTN & Puissance Joule $P$ / $\Delta T$ & \qty{0.061}{\milli\watt} & $\Delta T \approx \qty{0.09}{\degreeCelsius}$ & Négligeable ($< \qty{0.8}{\degreeCelsius}$) \\
+    Auto-échauffement & Puissance $P$ / $\Delta T$ & \qty{0.061}{\milli\watt} & $\Delta T \approx \qty{0.09}{\degreeCelsius}$ & Négligeable ($< \qty{0.8}{\degreeCelsius}$) \\
     \bottomrule
   \end{tabularx}
-  \caption{Synthèse globale des grandeurs mesurées et de leurs incertitudes métrologiques.}
+  \caption{Synthèse des résultats expérimentaux et incertitudes associées.}
   \label{tab:recap-labo}
 \end{table}
 
-\section{Critère de compatibilité métrologique}
+\section{Compatibilité entre la mesure CTN et la mesure Pt100}
 \label{sec:compatibilite}
 
-Pour tester rigoureusement la cohérence des deux mesures indépendantes de la température ambiante obtenues avec deux technologies de transducteurs distinctes (CTN SEMI833-ET et Pt100 KP), on applique le facteur d'élargissement normalisé $C$ (équivalent au nombre d'écarts $E_n$) :
-\begin{equation}
-    C = \frac{\big| T_{\text{amb, NTC}} - T_{\text{amb, Pt100}} \big|}{\sqrt{u(T_{\text{amb, NTC}})^2 + u(T_{\text{amb, Pt100}})^2}}
-    \label{eq:critere_compatibilite}
-\end{equation}
-En insérant les valeurs numériques et leurs incertitudes-types :
+Pour vérifier la cohérence des deux mesures indépendantes de la température ambiante du laboratoire :
 \begin{itemize}[leftmargin=1.2cm]
-    \item $T_{\text{amb, NTC}} = \qty{21.54}{\degreeCelsius}$ avec $u(T_{\text{amb, NTC}}) = \qty{0.80}{\degreeCelsius}$ ;
-    \item $T_{\text{amb, Pt100}} = \qty{22.16}{\degreeCelsius}$ avec $u(T_{\text{amb, Pt100}}) = \qty{0.15}{\degreeCelsius}$.
+    \item CTN : $T_{\text{amb, NTC}} = \qty{21.54 \pm 0.80}{\degreeCelsius}$ (incertitude dominée par la tolérance constructeur de $\pm \qty{0.8}{\degreeCelsius}$) ;
+    \item Pt100 : $T_{\text{amb, Pt100}} = \qty{22.16 \pm 0.15}{\degreeCelsius}$ (incertitude dominée par la classe A de $\pm \qty{0.15}{\degreeCelsius}$).
 \end{itemize}
-L'écart absolu entre les deux mesures est de :
+L'écart mesuré entre les deux capteurs est de :
 \begin{equation}
     \Delta T = |21.54 - 22.16| = \qty{0.62}{\degreeCelsius}
 \end{equation}
-L'incertitude-type composée associée à la différence vaut :
+L'incertitude combinée vaut :
 \begin{equation}
-    u_c = \sqrt{(0.80)^2 + (0.15)^2} = \sqrt{0.6400 + 0.0225} = \sqrt{0.6625} \approx \qty{0.814}{\degreeCelsius}
+    u_c = \sqrt{u_{\text{NTC}}^2 + u_{\text{Pt100}}^2} = \sqrt{0.80^2 + 0.15^2} \approx \qty{0.814}{\degreeCelsius}
 \end{equation}
-Le facteur de compatibilité métrologique vaut donc :
+Le facteur de compatibilité normalisé est :
 \begin{equation}
-    C = \frac{0.62}{0.814} \approx \mathbf{0.76}
+    C = \frac{\Delta T}{u_c} = \frac{0.62}{0.814} \approx \mathbf{0.76}
 \end{equation}
+Comme $C \le 2$, l'écart de \qty{0.62}{\degreeCelsius} est statistiquement justifié par les incertitudes de mesure. Les deux méthodes sont en parfait accord métrologique.
 
-\noindent
-\textbf{Interprétation métrologique :} \\
-Selon la norme internationale d'intercomparaison métrologique, les deux résultats sont jugés \textbf{pleinement compatibles} à un niveau de confiance de \qty{95}{\percent} dès lors que $C \le 2$ (critère $2\sigma$). Avec $C = 0.76$, l'écart de \qty{0.62}{\degreeCelsius} entre les deux capteurs est entièrement justifié par les barres d'erreur expérimentales. La Pt100 présente une incertitude plus de cinq fois plus serrée ($u = \qty{0.15}{\degreeCelsius}$) que la thermistance ($u = \qty{0.80}{\degreeCelsius}$), cette dernière étant pénalisée par sa tolérance de fabrication sans étalonnage individuel.
-
-\section{Analyse des sources d'erreurs dominantes}
+\section{Analyse des principales sources d'erreurs}
 \label{sec:sources_erreurs}
 
-L'évaluation des incertitudes met en exergue trois sources d'erreurs prépondérantes :
-
-\subsection*{1. Erreur systématique de câblage en 2 fils sur la Pt100 (\qty{+0.23}{\degreeCelsius})}
-La résistance de ligne du câble de \qty{1}{\meter} a été quantifiée lors de l'étalonnage à $2 R_{\text{ligne}} = 100.16 - 100.07 = \qty{0.09}{\ohm}$. Cette résistance parasite engendre une déviation systématique de :
-\begin{equation}
-    \Delta T_{\text{ligne}} = +\frac{\qty{0.09}{\ohm}}{\qty{0.385}{\ohm\per\degreeCelsius}} \approx +\qty{0.23}{\degreeCelsius}
-\end{equation}
-Cette erreur positive dépasse à elle seule la tolérance admise pour un capteur de classe A ($\pm \qty{0.15}{\degreeCelsius}$). Ce résultat démontre sans équivoque la nécessité absolue du montage 4 fils (Kelvin) dès lors qu'une sonde thermorésistive de faible valeur nominale (\qty{100}{\ohm}) est déportée de l'appareil de mesure.
-
-\subsection*{2. Effet d'auto-échauffement de la perle CTN (\qty{+0.09}{\degreeCelsius})}
-Sous la tension d'alimentation du pont $V_{CC} = \qty{14}{\volt}$ avec $R = \qty{462.35}{\kilo\ohm}$, la puissance dissipée dans la CTN à température ambiante vaut $P \approx \qty{0.061}{\milli\watt}$. Avec un coefficient de dissipation thermique en air calme de $\delta \approx \qty{0.7}{\milli\watt\per\degreeCelsius}$, l'auto-échauffement résiduel est estimé à :
-\begin{equation}
-    \Delta T_{\text{auto}} = \frac{P}{\delta} \approx \qty{0.09}{\degreeCelsius}
-\end{equation}
-Ce biais positif systématique représente environ \qty{11}{\percent} de la tolérance constructeur ($\pm \qty{0.8}{\degreeCelsius}$). Il confirme l'excellence du compromis apporté par la résistance série $R \approx \qty{470}{\kilo\ohm}$, qui maintient l'auto-échauffement sous le dixième de degré tout en procurant une tension mesurable sur la carte DAQ ($U_{NTC} \approx \qty{2.43}{\volt}$).
-
-\subsection*{3. Fluctuations du flux d'air chaud et répétabilité expérimentale}
-La comparaison statistique entre la mesure standard et la mesure suréchantillonnée met en relief deux enseignements métrologiques fondamentaux :
-\begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{Filtrage du bruit électronique vs turbulence aéraulique :} Le suréchantillonnage hardware par paquets de $100$ échantillons moyennés réduit d'un facteur théorique $\sqrt{100} = 10$ le bruit blanc de conversion ADC. Toutefois, l'écart-type résiduel observé sur le signal stabilisé demeure d'environ $\sigma \approx \qty{3}{\degreeCelsius}$ dans les deux séries. Ceci prouve de manière éclatante que le bruit limitant n'est pas d'origine électronique, mais d'origine aérothermique : l'écoulement d'air issu du sèche-cheveux est hautement turbulent, avec des tourbillons convectifs instables et des variations locales d'énergie cinétique.
-    \item \textbf{Non-superposition des courbes et non-répétabilité manuelle :} Sur le graphique comparatif (figure~\ref{fig:diff_over_normal}), les deux courbes ne sont pas rigoureusement confondues en température ($\bar{T}_{\text{norm, stab}} = \qty{41.13}{\degreeCelsius}$ contre $\bar{T}_{\text{over, stab}} = \qty{42.83}{\degreeCelsius}$, soit un décalage de $\qty{1.70}{\degreeCelsius}$). Ce décalage provient directement du manque de répétabilité de la manipulation manuelle : les composants (la perle thermistance et le sèche-cheveux) étaient tenus à la main sans potence ni support fixe rigide. Les inévitables micro-mouvements des bras des opérateurs et les variations géométriques de position et de distance au sein du cône de flux d'air chaud entre les deux séries modifient l'exposition thermique locale du capteur.
-\end{itemize}
-Le suréchantillonnage offre une lecture numérique parfaitement lissée et exempte de parasites d'acquisition haute fréquence, mais ne saurait corriger les instabilités physiques du fluide turbulent ni les imperfections de répétabilité géométrique d'une tenue manuelle.
+L'analyse met en évidence trois sources d'erreurs majeures :
+\begin{enumerate}[leftmargin=1.2cm]
+    \item \textbf{Résistance de ligne en 2 fils sur la Pt100 ($+\qty{0.23}{\degreeCelsius}$) :} L'étalonnage à \qty{0}{\degreeCelsius} a montré que le câble de liaison de \qty{1}{\meter} ajoute une résistance de $2 R_{\text{ligne}} = 100.16 - 100.07 = \qty{0.09}{\ohm}$. Avec une sensibilité de $\qty{0.385}{\ohm\per\degreeCelsius}$, cela provoque une erreur systématique positive de $\Delta T = \qty{+0.23}{\degreeCelsius}$, supérieure à la tolérance de classe A ($\pm \qty{0.15}{\degreeCelsius}$). Le montage 4 fils Kelvin est donc indispensable dès que la sonde est déportée.
+    \item \textbf{Auto-échauffement de la CTN ($\approx \qty{0.09}{\degreeCelsius}$) :} Sous la tension de pont de \qty{14}{\volt} avec $R = \qty{462.35}{\kilo\ohm}$, la puissance dissipée dans la thermistance est d'environ \qty{0.061}{\milli\watt}. Avec un coefficient de dissipation thermique en air calme de $\delta \approx \qty{0.7}{\milli\watt\per\degreeCelsius}$, l'élévation interne de température est limitée à \qty{0.09}{\degreeCelsius}. Cette erreur représente environ \qty{11}{\percent} de la tolérance du capteur et valide le choix de la résistance série de \qty{470}{\kilo\ohm}.
+    \item \textbf{Turbulence du flux d'air et non-répétabilité manuelle au sèche-cheveux :} 
+    Le suréchantillonnage matériel (moyenne de 100 points) élimine efficacement le bruit haute fréquence de numérisation de la carte DAQ. Cependant, l'écart-type résiduel reste élevé ($\sigma \approx \qty{3}{\degreeCelsius}$) sur les deux séries. Cela montre que le bruit provient directement des tourbillons turbulents du jet d'air chaud et non de l'électronique.
+    De plus, le décalage de température moyenne entre les deux essais ($\approx \qty{1.7}{\degreeCelsius}$) s'explique par la tenue manuelle : le sèche-cheveux et la perle n'étaient pas fixés sur un banc rigide, ce qui entraîne de légères variations de position et de distance entre les mesures.
+\end{enumerate}

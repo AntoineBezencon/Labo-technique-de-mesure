@@ -2,42 +2,23 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
-La mesure précise et reproductible de la température est l'une des grandeurs physiques les plus critiques dans l'ingénierie moderne, intervenant tant dans la régulation des procédés industriels, les systèmes biomédicaux que dans la caractérisation thermique de composants électroniques. 
-
-Ce laboratoire de travaux pratiques a pour cadre l'étude comparative approfondie de deux familles fondamentales de capteurs thermorésistifs :
+La mesure de température est courante et critique dans les procédés industriels, les bancs d'essais et les systèmes électroniques. Ce laboratoire est consacré à l'étude pratique et à la comparaison de deux technologies de capteurs thermorésistifs usuelles :
 \begin{itemize}[leftmargin=1.2cm]
-    \item Une thermistance à coefficient de température négatif (\textbf{CTN / NTC}) de type médical SEMI833-ET, caractérisée par une sensibilité thermique très élevée et une forte non-linéarité ;
-    \item Un détecteur de température à résistance de platine (\textbf{RTD Pt100}) chemisé en acier inoxydable (type KP), réputé pour sa linéarité, son excellente stabilité temporelle et sa conformité aux standards internationaux (norme IEC 60751).
+    \item Une \textbf{thermistance CTN} (perle miniature SEMI833-ET) : capteur semi-conducteur à coefficient de température négatif, présentant une forte sensibilité mais une réponse très non-linéaire.
+    \item Une \textbf{sonde RTD Pt100} (modèle industriel KP chemisé en acier inoxydable) : résistance de platine à coefficient positif, réputée pour sa linéarité, sa reproductibilité et sa stabilité dans le temps (norme IEC 60751).
 \end{itemize}
-L'ensemble des expérimentations met en œuvre la chaîne instrumentale du laboratoire associant un multimètre numérique de table de haute précision (Keysight 34460A, 6½ digits), un banc d'étalonnage thermostatisé à sec (Fluke 9103) et une carte d'acquisition multifonction (National Instruments PCIe-6321) pilotée par l'environnement logiciel LabVIEW.
 
-\section{Objectifs du laboratoire}
+Les manipulations sont réalisées avec le matériel du laboratoire comprenant un multimètre de table Keysight 34460A (résolution 6½ digits), un four d'étalonnage à sec Fluke 9103 et une carte d'acquisition National Instruments PCIe-6321 interfacée sous LabVIEW.
+
+\section{Objectifs du travail}
 \label{sec:intro_objectifs}
 
-Les objectifs assignés à ce travail pratique sont structurés selon six axes métrologiques majeurs :
+Le travail pratique poursuit six objectifs principaux :
 \begin{enumerate}[leftmargin=1.2cm]
-    \item \textbf{Mesure et caractérisation de la thermistance CTN :} Évaluer manuellement la résistance de la sonde SEMI833-ET à température ambiante, calculer la température par interpolation de la table constructeur et dimensionner un pont diviseur de tension sous \qty{14}{\volt} en vérifiant que la puissance dissipée par effet Joule n'engendre pas d'auto-échauffement perturbateur significatif ;
-    \item \textbf{Acquisition numérique et traitement du signal sous LabVIEW :} Implémenter sous LabVIEW la conversion tension-résistance puis résistance-température (via table d'interpolation polynomiale), et analyser l'impact du suréchantillonnage (\textit{oversampling} moyenné sur 100 points) sur la réduction du bruit lors de l'enregistrement de la température d'un flux d'air chaud turbulent ;
-    \item \textbf{Étalonnage au point fixe à \qty{0}{\degreeCelsius} de la Pt100 :} Réaliser l'étalonnage de la sonde chemisée dans un four d'étalonnage à sec à \qty{-0.080}{\degreeCelsius} pour identifier précisément sa valeur $R_0$ étalonnée individuelle à \qty{0.00}{\degreeCelsius} ;
-    \item \textbf{Comparaison métrologique des configurations 2 fils (2W) et 4 fils (4W) :} Quantifier rigoureusement l'erreur systématique introduite par la résistance parasite des conducteurs du câble de liaison et valider le montage 4 fils Kelvin ;
-    \item \textbf{Caractérisation dynamique de la Pt100 soumise à un échelon thermique :} Mesurer la réponse indicielle temporelle lors d'une immersion brusque dans un récipient d'eau chaude, modéliser le comportement sous la forme d'un système linéaire du premier ordre et déterminer la constante de temps $\tau$ ainsi que le temps de réponse à \qty{95}{\percent} ($t_{95\%}$) par quatre méthodes comparatives (tangente initiale, seuil à \qty{63.2}{\percent}, fit exponentiel par moindres carrés et critère à \qty{95}{\percent}) ;
-    \item \textbf{Synthèse métrologique et test de compatibilité quantitative :} Comparer les mesures de température ambiante fournies par les deux capteurs indépendants au moyen du critère normalisé de compatibilité métrologique ($E_n$ / facteur d'élargissement $C$) et dresser le bilan quantitatif des incertitudes associées.
+    \item \textbf{Mesure ambiante par la CTN :} Mesurer manuellement la résistance de la thermistance à température ambiante et déduire la température par la pente locale issue de la datasheet constructeur.
+    \item \textbf{Conditionnement et auto-échauffement :} Dimensionner un pont diviseur sous \qty{14}{\volt} pour adapter le signal à la carte d'acquisition et vérifier par le calcul que l'auto-échauffement interne par effet Joule reste négligeable devant la tolérance du capteur.
+    \item \textbf{Acquisition LabVIEW et suréchantillonnage :} Mettre en œuvre la chaîne d'acquisition avec conversion par table de correspondance, puis comparer une mesure normale et une mesure avec suréchantillonnage (moyenne de 100 points) lors du chauffage au sèche-cheveux.
+    \item \textbf{Étalonnage au point fixe à \qty{0}{\degreeCelsius} de la Pt100 :} Calibrer la sonde dans le puits sec pour déterminer sa résistance réelle $R_0$.
+    \item \textbf{Comparaison métrologique 2 fils vs 4 fils :} Mesurer l'erreur systématique introduite par les conducteurs de liaison en montage deux fils (2W) et justifier l'intérêt du montage quatre fils (4W) Kelvin.
+    \item \textbf{Caractérisation dynamique de la Pt100 :} Mesurer la réponse indicielle lors d'un échelon thermique en eau chaude et extraire la constante de temps $\tau$ ainsi que le temps de réponse à \qty{95}{\percent} ($t_{95\%}$) par différentes méthodes (tangente, seuil à \qty{63.2}{\percent}, ajustement par moindres carrés).
 \end{enumerate}
-
-\section{Idée physique}
-\label{sec:intro_idee_physique}
-
-La mesure de la température par variation de résistance électrique repose sur deux mécanismes microscopiques fondamentalement différents selon la nature du matériau conducteur ou semi-conducteur :
-
-\subsection*{Conduction métallique et diffusion par les phonons (Pt100)}
-Dans un métal noble tel que le platine pur, la conduction électrique est assurée par un gaz d'électrons de conduction libres dont la concentration volumique reste quasiment constante avec la température. La résistance électrique provient des collisions des électrons avec les vibrations du réseau cristallin (phonons). Lorsque la température augmente, l'agitation thermique du réseau croît, ce qui augmente la section efficace de diffusion des électrons et réduit leur libre parcours moyen. Il en résulte une élévation monotone et quasi-linéaire de la résistivité électrique avec la température (coefficient de température positif, PTC).
-
-\subsection*{Excitation thermique de porteurs dans les semi-conducteurs (CTN)}
-Dans une céramique d'oxydes métalliques frittés (telle que celle constituant la perle CTN SEMI833-ET), les électrons sont initialement piégés dans la bande de valence ou sur des niveaux donneurs/accepteurs. L'élévation de température fournit l'énergie d'activation nécessaire pour promouvoir thermiquement des paires de porteurs libres vers la bande de conduction selon une distribution de type Arrhenius/Boltzmann ($n \propto e^{-E_g / 2 k_B T}$). L'augmentation exponentielle du nombre de porteurs surpasse de plusieurs ordres de grandeur l'augmentation des collisions du réseau, conduisant à une décroissance exponentielle rapide de la résistance électrique (coefficient de température négatif, NTC), particulièrement sensible autour des températures ambiantes.
-
-\subsection*{Dynamique thermique et transfert par convection}
-Lorsqu'un capteur est immergé dans un fluide à une température différente $T_\infty$, le transfert d'énergie thermique à travers l'interface solide-fluide s'effectue principalement par convection thermique, décrite par la loi de refroidissement de Newton :
-\begin{equation}
-    \Phi(t) = h \cdot S \cdot \big(T_\infty - T(t)\big)
-\end{equation}
-où $h$ est le coefficient d'échange convectif superficiel et $S$ la surface de contact. L'énergie accumulée dans la masse $m$ du capteur de chaleur massique $c$ induit une élévation de température interne $\Phi(t) = m \cdot c \cdot \frac{\mathrm{d}T}{\mathrm{d}t}$. L'équilibre thermique conduit immédiatement à une équation différentielle linéaire du premier ordre gouvernée par la constante de temps $\tau = \frac{m \cdot c}{h \cdot S}$, révélant le couplage direct entre propriétés intrinsèques du capteur ($m, c, S$) et conditions d'écoulement du fluide ($h$).

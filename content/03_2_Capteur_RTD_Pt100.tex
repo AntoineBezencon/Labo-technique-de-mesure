@@ -32,8 +32,7 @@ Selon la norme internationale IEC 60751 régissant les thermomètres industriels
 \begin{equation}
     \Delta T_{\text{tol}} = \pm (0.15 + 0.002 \cdot |T|) \approx \pm (0.15 + 0.002 \times 22.16) \approx \pm \qty{0.19}{\degreeCelsius}
 \end{equation}
-(avec une tolérance nominale à \qty{0}{\degreeCelsius} de $\pm \qty{0.15}{\degreeCelsius}$).
-L'incertitude de lecture du multimètre Keysight 34460A en 4W étant inférieure à $\pm \qty{0.004}{\ohm}$ (soit $\pm \qty{0.01}{\degreeCelsius}$), l'incertitude de mesure est totalement dominée par la tolérance normalisée du capteur. L'incertitude-type associée est donc :
+L'incertitude de lecture du multimètre Keysight 34460A en 4W étant inférieure à $\pm \qty{0.004}{\ohm}$ (soit $\pm \qty{0.01}{\degreeCelsius}$), l'incertitude de mesure est totalement dominée par la tolérance normalisée du capteur :
 \begin{equation}
     T_{\text{amb, Pt100}} = \mathbf{\qty{22.16 \pm 0.15}{\degreeCelsius}} \quad \text{avec } u(T_{\text{amb, Pt100}}) = \qty{0.15}{\degreeCelsius}
 \end{equation}
@@ -87,8 +86,6 @@ En régime stabilisé à l'air ambiant du laboratoire, le nœud de conversion La
 \end{equation}
 Cette valeur numérique confirme la crédibilité métrologique de la mesure : elle est en accord remarquable avec le calcul manuel linéarisé ($T_{\text{amb}} = \qty{22.16}{\degreeCelsius}$), l'écart minime de \qty{0.08}{\degreeCelsius} s'expliquant par la prise en compte de la courbure quadratique de Callendar-Van Dusen et la valeur étalonnée réelle de $R_0$.
 
-Un sous-VI Express « Enregistrer dans un fichier » a été configuré en sortie de boucle pour journaliser les données temporelles au format LVM en vue de l'expérience dynamique indicielle suivante.
-
 \subsection{Temps de réponse du capteur dans l'eau}
 \label{subsec:temps_reponse_pt100}
 
@@ -101,80 +98,50 @@ Le comportement thermique du capteur est modélisé par une équation de premier
     T(t) = T_\infty - (T_\infty - T_0) \cdot \exp\left(-\frac{t}{\tau}\right)
     \label{eq:premier_ordre}
 \end{equation}
-avec :
-\begin{itemize}[leftmargin=1.2cm]
-    \item $T_0 = \qty{24.11}{\degreeCelsius}$ : température au début du saut ;
-    \item $T_\infty = \qty{66.71}{\degreeCelsius}$ : température finale atteinte dans l'eau chaude (moyenne des 20 derniers points stabilisés) ;
-    \item $\tau$ : constante de temps du capteur (temps nécessaire pour atteindre \qty{63.2}{\percent} du saut total).
-\end{itemize}
+avec $T_0 = \qty{24.11}{\degreeCelsius}$ (température initiale), $T_\infty = \qty{66.71}{\degreeCelsius}$ (température finale stabilisée) et $\tau$ la constante de temps.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.92\textwidth]{assets/graphs/reponse_indicielle_pt100.pdf}
-    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut de température dans l'eau chaude : points de mesure expérimentaux, ajustement de la courbe exponentielle (fit), droite tangente à l'origine et repères graphiques à 63\% et 95\%. Les axes portent leurs unités entre crochets selon la check-list TechMes.}
+    \includegraphics[width=0.68\textwidth]{assets/graphs/reponse_indicielle_pt100.pdf}
+    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut de température dans l'eau chaude : points de mesure expérimentaux, fit exponentiel, tangente initiale et repères à 63\% et 95\%.}
     \label{fig:reponse_indicielle_pt100}
 \end{figure}
 
 \subsubsection*{Méthode 1 : Tangente au démarrage de la montée}
-On trace la droite tangente à la courbe au point de départ ($t = \qty{0}{\second}$). La pente initiale de cette droite vaut :
-\begin{equation}
-    p = \frac{T_\infty - T_0}{\tau} \approx \qty{7.36}{\degreeCelsius\per\second}
-\end{equation}
-L'intersection entre cette droite tangente et la ligne horizontale de la température finale $T_\infty$ donne directement la constante de temps :
+La droite tangente à la courbe en $t = \qty{0}{\second}$ a pour pente initiale $p = \frac{T_\infty - T_0}{\tau} \approx \qty{7.36}{\degreeCelsius\per\second}$. L'intersection avec l'asymptote $T_\infty$ donne directement :
 \begin{equation}
     \tau_{\text{tan}} = \mathbf{\qty{5.80}{\second}}
 \end{equation}
 
 \subsubsection*{Méthode 2 : Seuil des 63\% de la montée totale}
-Pour une réponse du premier ordre, au temps $t = \tau$, la température a parcouru exactement \qty{63.2}{\percent} de la différence totale de température :
+Pour une réponse du premier ordre, à $t = \tau$, la température a parcouru \qty{63.2}{\percent} du saut :
 \begin{equation}
     T_{63\%} = T_0 + 0.632 \cdot (T_\infty - T_0) = 24.11 + 0.632 \cdot (66.71 - 24.11) = \qty{51.07}{\degreeCelsius}
 \end{equation}
-En observant directement sur le tableau des mesures à quel instant cette valeur de \qty{51.07}{\degreeCelsius} est atteinte (entre le point à \qty{5.51}{\second} qui vaut \qty{49.00}{\degreeCelsius} et le point à \qty{5.92}{\second} qui vaut \qty{51.28}{\degreeCelsius}), on trouve :
+Dans le fichier de mesures, cette valeur est atteinte entre $t = \qty{5.51}{\second}$ (\qty{49.00}{\degreeCelsius}) et $t = \qty{5.92}{\second}$ (\qty{51.28}{\degreeCelsius}), soit par interpolation :
 \begin{equation}
     \tau_{63\%} = \mathbf{\qty{5.76}{\second}}
 \end{equation}
 
 \subsubsection*{Méthode 3 : Ajustement exponentiel par moindres carrés (Fit)}
-Contrairement aux deux premières méthodes qui reposent sur un repérage visuel ou sur un seul point, l'ajustement mathématique (fit) utilise l'ensemble des 114 points de la mesure pour déterminer la meilleure courbe théorique possible.
-
-Le modèle ajusté suit la fonction :
-\begin{equation}
-    T(t) = A + B \cdot \exp\left(-\frac{t}{\tau}\right)
-\end{equation}
-L'algorithme des moindres carrés cherche automatiquement le triplet de valeurs $(A, B, \tau)$ qui minimise la somme des carrés des écarts entre les points mesurés $T_i$ et la courbe théorique $T(t_i)$ :
-\begin{equation}
-    S = \sum_{i=1}^{N} \Big( T_i - \big( A + B \cdot e^{-t_i/\tau} \big) \Big)^2 \quad \longrightarrow \quad \min
-\end{equation}
-Les résultats obtenus sont :
-\begin{itemize}[leftmargin=1.2cm]
-    \item $A = \qty{66.77}{\degreeCelsius}$ : température finale asymptotique calculée par l'algorithme (très proche de la moyenne expérimentale à \qty{66.71}{\degreeCelsius}) ;
-    \item $B = \qty{-42.19}{\degreeCelsius}$ : amplitude du saut (donnant une valeur initiale théorique $A + B = \qty{24.58}{\degreeCelsius}$) ;
-    \item $\tau_{\text{fit}} = \mathbf{\qty{5.80}{\second}}$ : constante de temps globale la plus fidèle à l'ensemble des données ;
-    \item $\text{RMSE} = \sqrt{\frac{S}{N}} = \qty{0.09}{\degreeCelsius}$ : l'écart quadratique moyen résiduel entre les mesures et le modèle exponentiel n'est que de \qty{0.09}{\degreeCelsius}. Cette dispersion résiduelle infime démontre l'excellente conformité du comportement dynamique réel avec un système thermique linéaire du premier ordre. L'incertitude-type sur l'estimation de $\tau$ déduite de la matrice de covariance du fit est de $u(\tau) \approx \qty{0.05}{\second}$, soit :
-    \begin{equation}
-        \tau = \mathbf{\qty{5.80 \pm 0.05}{\second}}
-    \end{equation}
+Contrairement aux deux premières méthodes reposant sur un repérage visuel, l'ajustement mathématique (fit) utilise l'ensemble des 114 points mesurés pour déterminer le triplet $(A, B, \tau)$ du modèle $T(t) = A + B \cdot e^{-t/\tau}$ qui minimise la somme des carrés des écarts résiduels :
+\begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt,parsep=0pt]
+    \item $A = \qty{66.77}{\degreeCelsius}$ : température finale asymptotique (très proche de la moyenne finale à \qty{66.71}{\degreeCelsius}) ;
+    \item $B = \qty{-42.19}{\degreeCelsius}$ : amplitude du saut (donnant une valeur initiale $A + B = \qty{24.58}{\degreeCelsius}$) ;
+    \item \textbf{$\tau_{\text{fit}} = \qty{5.80 \pm 0.05}{\second}$} : constante de temps optimale sur l'ensemble des données ;
+    \item $\text{RMSE} = \qty{0.09}{\degreeCelsius}$ : l'écart quadratique moyen résiduel est infime, confirmant la conformité avec un premier ordre linéaire.
 \end{itemize}
 
 \subsubsection*{Méthode 4 : Temps de réponse à 95\%}
-Le temps de réponse à \qty{95}{\percent} correspond au temps qu'il faut au capteur pour effectuer \qty{95}{\percent} de son saut thermique complet. D'après l'équation théorique :
+Le temps nécessaire pour effectuer \qty{95}{\percent} du saut thermique total s'exprime par :
 \begin{equation}
-    1 - e^{-t_{95\%}/\tau} = 0.95 \quad \implies \quad e^{-t_{95\%}/\tau} = 0.05
-\end{equation}
-En appliquant le logarithme naturel :
-\begin{equation}
-    t_{95\%} = -\ln(0.05) \cdot \tau \approx 2.996 \cdot \tau \approx 3 \cdot \tau
-\end{equation}
-Avec $\tau = \qty{5.80}{\second}$, on obtient :
-\begin{equation}
-    t_{95\%} = 2.996 \cdot 5.80 \approx \mathbf{\qty{17.37 \pm 0.15}{\second}}
+    t_{95\%} = -\ln(0.05) \cdot \tau \approx 2.996 \cdot \tau \approx \mathbf{\qty{17.37 \pm 0.15}{\second}}
 \end{equation}
 
 \begin{table}[H]
     \centering
     \small
-    \begin{tabularx}{0.85\textwidth}{Xcc}
+    \begin{tabularx}{0.75\textwidth}{Xcc}
         \toprule
         Méthode & Constante $\tau$ [s] & Écart relatif au fit [\%] \\
         \midrule
@@ -190,10 +157,10 @@ Avec $\tau = \qty{5.80}{\second}$, on obtient :
 \end{table}
 
 \noindent
-\textbf{Discussion et comparaison théorique :} 
-Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : la constante de temps $\tau = \frac{m \cdot c}{h \cdot S}$ n'est pas une constante intrinsèque du fluide, mais dépend du couplage aérothermique entre le capteur et son milieu :
-\begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{La géométrie et la masse thermique du capteur :} La puce sensible en platine nue (JUMO PCA 1.1505.1M) présente une constante de temps intrinsèque très faible dans l'eau ($t_{0.9} \approx \qty{0.3}{\second}$ selon sa fiche technique). Cependant, dans le capteur utilisé en TP, la puce est enfermée dans une gaine tubulaire en acier inoxydable (chemisage de $6 \times \qty{50}{\milli\meter}$) remplie d'un isolant minéral pulvérulent ($MgO$). Cette enveloppe métallique et la matière interne ajoutent une capacité calorifique importante et une résistance thermique de conduction qui ralentissent fortement le transfert de chaleur vers la puce platine.
-    \item \textbf{La vitesse du fluide (agitation) :} Dans une eau fortement agitée (comme dans les bancs d'essai des normes à $v = \qty{0.2}{\meter\per\second}$), le coefficient d'échange convectif $h$ est très élevé. Dans un récipient d'eau calme (comme durant notre manipulation), la convection naturelle engendre une couche limite d'eau stagnante autour du tube, ce qui diminue $h$ et augmente d'autant le temps de réponse.
+\textbf{Discussion et comparaison théorique :} \\
+Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : la constante $\tau = \frac{m \cdot c}{h \cdot S}$ dépend à la fois du capteur et des conditions du fluide :
+\begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt,parsep=0pt]
+    \item \textbf{Masse thermique et chemisage du capteur :} La puce nue (JUMO PCA 1.1505.1M) a une constante intrinsèque très faible ($t_{0.9} \approx \qty{0.3}{\second}$). En revanche, dans la sonde KP du TP, elle est enfermée dans un tube en acier inoxydable avec de la poudre isolante de magnésie ($MgO$). Ce chemisage ajoute une inertie thermique importante qui ralentit le transfert thermique vers le platine.
+    \item \textbf{Vitesse du fluide (agitation) :} Dans une eau fortement brassée (comme les bancs normés à \qty{0.2}{\meter\per\second}), le coefficient convectif $h$ est très élevé. Dans notre eau calme, la couche limite stagnante diminue $h$ et augmente le temps de réponse.
 \end{itemize}
-Notre valeur mesurée de $\tau \approx \qty{5.8}{\second}$ (soit $t_{90\%} \approx 2.3 \cdot \tau \approx \qty{13.3}{\second}$) est tout à fait typique et représentative pour une sonde industrielle chemisée inox de diamètre standard plongée dans de l'eau au repos.
+La valeur mesurée $\tau \approx \qty{5.8}{\second}$ est donc tout à fait cohérente pour une sonde industrielle chemisée inox en eau au repos.

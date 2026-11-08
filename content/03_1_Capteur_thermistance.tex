@@ -90,21 +90,11 @@ Les séries temporelles de mesure de température acquises en plaçant la CTN da
     \label{fig:diff_over_normal}
 \end{figure}
 
-\subsubsection*{Analyse statistique quantitative des deux séries}
-Le calcul des grandeurs statistiques (moyenne arithmétique $\bar{T}$, écart-type d'échantillon $\sigma$ et incertitude-type sur la moyenne $u(\bar{T}) = \sigma / \sqrt{N}$) sur l'intégralité de l'enregistrement donne :
+\subsubsection*{Analyse statistique des deux séries}
+L'analyse statistique sur l'intégralité de l'enregistrement donne :
 \begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{Série standard ($N = 520$) :}
-    \begin{align}
-        \bar{T}_{\text{norm}} &= \qty{40.56}{\degreeCelsius} \\
-        \sigma_{\text{norm}} &= \qty{3.96}{\degreeCelsius} \\
-        u(\bar{T}_{\text{norm}}) &= \frac{\sigma_{\text{norm}}}{\sqrt{N}} = \frac{3.96}{\sqrt{520}} = \qty{0.17}{\degreeCelsius} \quad \implies \quad \bar{T}_{\text{norm}} = \mathbf{\qty{40.56 \pm 0.17}{\degreeCelsius}}
-    \end{align}
-    \item \textbf{Série avec suréchantillonnage ($N = 375$) :}
-    \begin{align}
-        \bar{T}_{\text{over}} &= \qty{41.90}{\degreeCelsius} \\
-        \sigma_{\text{over}} &= \qty{4.75}{\degreeCelsius} \\
-        u(\bar{T}_{\text{over}}) &= \frac{\sigma_{\text{over}}}{\sqrt{N}} = \frac{4.75}{\sqrt{375}} = \qty{0.25}{\degreeCelsius} \quad \implies \quad \bar{T}_{\text{over}} = \mathbf{\qty{41.90 \pm 0.25}{\degreeCelsius}}
-    \end{align}
+    \item \textbf{Série standard ($N = 520$) :} $\bar{T}_{\text{norm}} = \mathbf{\qty{40.56 \pm 0.17}{\degreeCelsius}}$ ($\sigma = \qty{3.96}{\degreeCelsius}$, incertitude sur la moyenne $u(\bar{T}) = \frac{3.96}{\sqrt{520}} = \qty{0.17}{\degreeCelsius}$) ;
+    \item \textbf{Série suréchantillonnée ($N = 375$) :} $\bar{T}_{\text{over}} = \mathbf{\qty{41.90 \pm 0.25}{\degreeCelsius}}$ ($\sigma = \qty{4.75}{\degreeCelsius}$, incertitude sur la moyenne $u(\bar{T}) = \frac{4.75}{\sqrt{375}} = \qty{0.25}{\degreeCelsius}$).
 \end{itemize}
 
 \noindent
