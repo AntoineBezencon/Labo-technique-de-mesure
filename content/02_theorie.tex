@@ -39,7 +39,7 @@ La sonde Pt100 utilise un élément en platine pur de résistance normalisée $R
     R(T) = R_0 \cdot (1 + \alpha\,T) \quad \text{avec } \alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}
     \label{eq:theorie_pt100_lineaire}
 \end{equation}
-La sensibilité thermique nominale et la formule inverse de température valent :
+La sensibilité thermique nominale $S$ [\unit{\ohm\per\degreeCelsius}] et la formule inverse de température valent :
 \begin{equation}
     S = R_0 \cdot \alpha = 100.00 \times 3.850 \cdot 10^{-3} = \qty{0.3850}{\ohm\per\degreeCelsius} \quad \implies \quad T = \frac{R(T) - R_0}{S}
     \label{eq:theorie_sensibilite_pt100}
@@ -62,7 +62,7 @@ Lorsqu'un capteur de température est soumis à un échelon brusque de températ
     \tau \cdot \frac{\mathrm{d}T(t)}{\mathrm{d}t} + T(t) = T_\infty
     \label{eq:theorie_equa_diff}
 \end{equation}
-où $\tau$ est la constante de temps thermique du capteur (en secondes), qui caractérise sa rapidité de réaction et son inertie thermique.
+où $\tau$ [\unit{\second}] est la constante de temps thermique du capteur, qui caractérise sa rapidité de réaction et son inertie thermique.
 
 Pour une température initiale $T(0) = T_0$, la réponse indicielle s'écrit :
 \begin{equation}
