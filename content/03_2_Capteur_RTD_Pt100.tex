@@ -157,10 +157,10 @@ Le temps nécessaire pour effectuer \qty{95}{\percent} du saut thermique total s
 \end{table}
 
 \noindent
-\textbf{Discussion et comparaison théorique :} \\
-Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : la constante $\tau = \frac{m \cdot c}{h \cdot S}$ dépend à la fois du capteur et des conditions du fluide :
+\textbf{Discussion et comparaison avec la fiche constructeur :} \\
+Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : le temps de réponse dépend à la fois de la construction du capteur et des conditions du milieu liquide :
 \begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt,parsep=0pt]
-    \item \textbf{Masse thermique et chemisage du capteur :} La puce nue (JUMO PCA 1.1505.1M) a une constante intrinsèque très faible ($t_{0.9} \approx \qty{0.3}{\second}$). En revanche, dans la sonde KP du TP, elle est enfermée dans un tube en acier inoxydable avec de la poudre isolante de magnésie ($MgO$). Ce chemisage ajoute une inertie thermique importante qui ralentit le transfert thermique vers le platine.
-    \item \textbf{Vitesse du fluide (agitation) :} Dans une eau fortement brassée (comme les bancs normés à \qty{0.2}{\meter\per\second}), le coefficient convectif $h$ est très élevé. Dans notre eau calme, la couche limite stagnante diminue $h$ et augmente le temps de réponse.
+    \item \textbf{Chemisage inox et inertie de la sonde :} La puce nue (JUMO PCA 1.1505.1M) a une constante intrinsèque très courte ($t_{0.9} \approx \qty{0.3}{\second}$). En revanche, la sonde KP du TP est une sonde industrielle protégée par un tube en acier inoxydable rempli de poudre isolante de magnésie ($MgO$). Cette enveloppe métallique ajoute une inertie thermique importante qui ralentit la propagation de la chaleur jusqu'à la résistance de platine.
+    \item \textbf{Agitation de l'eau :} Dans une eau en circulation rapide (comme lors des essais normés à \qty{0.2}{\meter\per\second}), le transfert de chaleur est accéléré. Dans notre bécher d'eau calme, la couche limite d'eau stagnante autour de la gaine ralentit l'échange thermique.
 \end{itemize}
-La valeur mesurée $\tau \approx \qty{5.8}{\second}$ est donc tout à fait cohérente pour une sonde industrielle chemisée inox en eau au repos.
+La valeur mesurée $\tau \approx \qty{5.8}{\second}$ ($t_{95\%} \approx \qty{17.4}{\second}$) est donc tout à fait cohérente pour une sonde industrielle chemisée inox plongée dans de l'eau au repos.

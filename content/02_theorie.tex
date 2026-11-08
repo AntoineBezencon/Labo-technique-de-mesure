@@ -47,7 +47,7 @@ La sensibilité thermique nominale et la formule inverse de température valent 
 
 La résistance d'une Pt100 étant faible (\qty{100}{\ohm}), les conducteurs de liaison ont un impact direct sur la mesure :
 \begin{itemize}[leftmargin=1.2cm]
-    \item \textbf{Montage 2 fils (2W) :} Le multimètre mesure la résistance totale incluant les deux fils de ligne ($2 R_{\text{ligne}}$), introduisant un biais systématique positif :
+    \item \textbf{Montage 2 fils (2W) :} Le multimètre mesure la résistance totale incluant les deux fils de ligne ($2 R_{\text{ligne}}$), ce qui introduit un biais systématique positif :
     \begin{equation}
         R_{\text{mes, 2W}} = R_{\text{Pt100}} + 2 \cdot R_{\text{ligne}} \quad \implies \quad \Delta T = \frac{2 \cdot R_{\text{ligne}}}{S}
     \end{equation}
@@ -57,24 +57,24 @@ La résistance d'une Pt100 étant faible (\qty{100}{\ohm}), les conducteurs de l
 \section{Modèle dynamique du premier ordre}
 \label{sec:theorie_dynamique}
 
-Lorsqu'une sonde est plongée dans un fluide à température $T_\infty$, le bilan convectif s'écrit selon la loi de Newton :
+Lorsqu'un capteur de température est soumis à un échelon brusque de température ($T_0 \to T_\infty$), son évolution temporelle suit l'équation différentielle classique d'un système du premier ordre :
 \begin{equation}
-    m \cdot c \cdot \frac{\mathrm{d}T(t)}{\mathrm{d}t} = h \cdot S \cdot \big(T_\infty - T(t)\big) \quad \iff \quad \tau \cdot \frac{\mathrm{d}T(t)}{\mathrm{d}t} + T(t) = T_\infty
+    \tau \cdot \frac{\mathrm{d}T(t)}{\mathrm{d}t} + T(t) = T_\infty
     \label{eq:theorie_equa_diff}
 \end{equation}
-avec la constante de temps thermique $\tau = \frac{m \cdot c}{h \cdot S}$ [s] ($m$ masse, $c$ chaleur massique, $h$ coefficient convectif, $S$ surface).
+où $\tau$ est la constante de temps thermique du capteur (en secondes), qui caractérise sa rapidité de réaction et son inertie thermique.
 
-Pour une température initiale $T(0) = T_0$, la solution indicielle s'écrit :
+Pour une température initiale $T(0) = T_0$, la réponse indicielle s'écrit :
 \begin{equation}
     T(t) = T_\infty - (T_\infty - T_0) \cdot e^{-t/\tau}
     \label{eq:theorie_solution_indicielle}
 \end{equation}
-Quatre méthodes sont utilisées pour identifier la constante de temps :
-\begin{enumerate}[leftmargin=1.2cm]
-    \item \textbf{Tangente à l'origine :} La tangente en $t = 0$ intercepte l'asymptote $T = T_\infty$ à $t = \tau$.
-    \item \textbf{Seuil à \qty{63.2}{\percent} :} Pour $t = \tau$, le capteur a parcouru $1 - e^{-1} \approx \qty{63.2}{\percent}$ du saut thermique.
-    \item \textbf{Fit exponentiel :} Minimisation de la somme des carrés des résidus du modèle $T(t) = A + B \cdot e^{-t/\tau}$.
-    \item \textbf{Temps de réponse à \qty{95}{\percent} ($t_{95\%}$) :} Temps pour atteindre \qty{95}{\percent} du saut : $t_{95\%} = -\ln(0.05) \cdot \tau \approx 3 \cdot \tau$.
+Quatre méthodes permettent d'identifier la constante de temps $\tau$ à partir des mesures :
+\begin{enumerate}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt]
+    \item \textbf{Tangente à l'origine :} La droite tangente en $t = \qty{0}{\second}$ intercepte l'asymptote finale $T = T_\infty$ à $t = \tau$.
+    \item \textbf{Seuil à \qty{63.2}{\percent} :} À l'instant $t = \tau$, le capteur a effectué $1 - e^{-1} \approx \qty{63.2}{\percent}$ du saut total de température.
+    \item \textbf{Ajustement numérique (fit) :} Régression non linéaire par moindres carrés sur l'ensemble des points avec le modèle $T(t) = A + B \cdot e^{-t/\tau}$.
+    \item \textbf{Temps de réponse à \qty{95}{\percent} ($t_{95\%}$) :} Temps nécessaire pour atteindre \qty{95}{\percent} du saut thermique : $t_{95\%} = -\ln(0.05) \cdot \tau \approx 3 \cdot \tau$.
 \end{enumerate}
 
 \section{Réduction du bruit par suréchantillonnage}
