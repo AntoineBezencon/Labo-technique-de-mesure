@@ -18,3 +18,5 @@ __pycache__/
 
 # Office temporary lock files
 ~$*.xlsx
+
+scratch/
