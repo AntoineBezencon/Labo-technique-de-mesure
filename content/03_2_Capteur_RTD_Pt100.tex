@@ -1,4 +1,5 @@
 % !TeX root = ../main.tex
+\clearpage
 \section{Capteur RTD Pt100 (PCA 1.1505.1M)}
 
 \subsection{Mesure de la température ambiante par le multimètre}
@@ -9,6 +10,10 @@ La sonde Pt100 industrielle (modèle KP chemisée inox, câble de \qty{1}{\meter
     \item En mode 4 fils (4W) : $R_{\text{Pt100, 4W}} = \qty{108.530}{\ohm}$ ;
     \item En mode 2 fils (2W) : $R_{\text{Pt100, 2W}} = \qty{108.408}{\ohm}$.
 \end{itemize}
+À l'ambiance, la valeur 2 fils mesurée est légèrement inférieure à la valeur 4 fils en raison d'une légère dérive de la température de la pièce ou de la manipulation de la sonde entre les deux branchements. La comparaison rigoureuse 2 fils vs 4 fils est donc réalisée en milieu contrôlé dans le puits sec à \qty{0}{\degreeCelsius} (section~\ref{subsec:pt100_etalonnage}).
+
+Sous LabVIEW, sans spécifier de temporisation dans la boucle, la cadence d'échantillonnage observée est limitée par le temps d'intégration du multimètre et la communication USB (environ 150 à \qty{200}{\milli\second}). Pour la suite des mesures, la boucle est temporisée à \qty{500}{\milli\second}.
+
 En appliquant le modèle linéarisé ($R_0 = \qty{100.00}{\ohm}$, $\alpha = \qty{3.850e-3}{\degreeCelsius^{-1}}$, sensibilité $S = \qty{0.3850}{\ohm\per\degreeCelsius}$), la température ambiante déduite en 4W vaut :
 \begin{equation}
     T_{\text{amb}} = \frac{R_{\text{Pt100, 4W}} - R_0}{R_0 \cdot \alpha} = \frac{108.530 - 100.00}{0.3850} = \mathbf{\qty{22.16 \pm 0.15}{\degreeCelsius}}
@@ -43,24 +48,30 @@ Cette valeur concorde parfaitement avec le calcul manuel linéarisé ($T_{\text{
 
 La sonde Pt100 a été immergée brusquement de l'air ambiant dans un bécher d'eau chaude sous acquisition 4W. Les deux points précédant l'immersion ont été retirés pour caler l'origine temporelle ($t = \qty{0}{\second}$). Le saut thermique évolue de $T_0 = \qty{24.11}{\degreeCelsius}$ à $T_\infty = \qty{66.71}{\degreeCelsius}$.
 
+\vspace{-4pt}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.68\textwidth]{assets/graphs/reponse_indicielle_pt100.pdf}
-    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut dans l'eau chaude : points expérimentaux, ajustement exponentiel, tangente initiale et seuils à 63\% et 95\%.}
+    \includegraphics[width=0.52\textwidth]{assets/graphs/reponse_indicielle_pt100.pdf}
+    \vspace{-4pt}
+    \caption{Réponse indicielle de la sonde RTD Pt100 lors du saut dans l'eau chaude : ajustement exponentiel, tangente initiale et seuils à 63\% et 95\%.}
     \label{fig:reponse_indicielle_pt100}
 \end{figure}
+\vspace{-8pt}
 
 Quatre méthodes d'identification de la constante de temps $\tau$ ont été appliquées :
-\begin{enumerate}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt]
+\begin{enumerate}[leftmargin=1.0cm,topsep=1pt,itemsep=0.5pt,parsep=0pt]
     \item \textbf{Tangente à l'origine :} pente initiale $p = \frac{T_\infty - T_0}{\tau} \approx \qty{7.36}{\degreeCelsius\per\second} \implies \tau_{\text{tan}} = \mathbf{\qty{5.80}{\second}}$.
     \item \textbf{Seuil des 63\% :} $T_{63\%} = 24.11 + 0.632 \cdot (66.71 - 24.11) = \qty{51.07}{\degreeCelsius} \implies \tau_{63\%} = \mathbf{\qty{5.76}{\second}}$.
-    \item \textbf{Fit exponentiel :} ajustement $T(t) = A + B \cdot e^{-t/\tau}$ sur les 114 points ($A = \qty{66.77}{\degreeCelsius}$, $B = \qty{-42.19}{\degreeCelsius}$) $\implies \tau_{\text{fit}} = \mathbf{\qty{5.80 \pm 0.05}{\second}}$ ($\text{RMSE} = \qty{0.09}{\degreeCelsius}$, accord parfait au 1er ordre).
+    \item \textbf{Fit exponentiel :} régression $T(t) = A + B \cdot e^{-t/\tau}$ sur 114 points ($A = \qty{66.77}{\degreeCelsius}$, $B = \qty{-42.19}{\degreeCelsius}$) $\implies \tau_{\text{fit}} = \mathbf{\qty{5.80 \pm 0.05}{\second}}$ ($\text{RMSE} = \qty{0.09}{\degreeCelsius}$).
     \item \textbf{Temps de réponse à 95\% :} $t_{95\%} = -\ln(0.05) \cdot \tau \approx 3 \cdot \tau \implies t_{95\%} = \mathbf{\qty{17.37 \pm 0.15}{\second}}$.
 \end{enumerate}
 
+\vspace{-4pt}
 \begin{table}[H]
     \centering
     \small
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{0.95}
     \begin{tabularx}{0.75\textwidth}{Xcc}
         \toprule
         Méthode & Constante $\tau$ [s] & Écart relatif au fit [\%] \\
@@ -75,12 +86,13 @@ Quatre méthodes d'identification de la constante de temps $\tau$ ont été appl
     \caption{Synthèse comparative des constantes de temps de la Pt100.}
     \label{tab:comparaison_tau}
 \end{table}
+\vspace{-6pt}
 
 \noindent
 \textbf{Discussion et comparaison avec la fiche constructeur :} \\
-Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} : le temps de réponse dépend à la fois de la construction du capteur et des conditions du milieu liquide :
-\begin{itemize}[leftmargin=1.2cm,topsep=2pt,itemsep=1pt,parsep=0pt]
-    \item \textbf{Chemisage inox et inertie de la sonde :} La puce nue (JUMO PCA 1.1505.1M) a une constante intrinsèque très courte ($t_{0.9} \approx \qty{0.3}{\second}$). En revanche, la sonde KP du TP est une sonde industrielle protégée par un tube en acier inoxydable rempli de poudre isolante de magnésie ($MgO$). Cette enveloppe métallique ajoute une inertie thermique importante qui ralentit la propagation de la chaleur jusqu'à la résistance de platine.
-    \item \textbf{Agitation de l'eau :} Dans une eau en circulation rapide (comme lors des essais normés à \qty{0.2}{\meter\per\second}), le transfert de chaleur est accéléré. Dans notre bécher d'eau calme, la couche limite d'eau stagnante autour de la gaine ralentit l'échange thermique.
+Existe-t-il une « valeur universelle » de $\tau$ pour l'eau ? La réponse est \textbf{non} :
+\begin{itemize}[leftmargin=1.0cm,topsep=1pt,itemsep=0pt,parsep=0pt]
+    \item \textbf{Gaine inox et isolant $MgO$ :} La puce nue JUMO a une constante courte ($t_{0.9} \approx \qty{0.3}{\second}$). La sonde industrielle KP est protégée par un tube inox rempli de magnésie ($MgO$), ajoutant une forte inertie thermique.
+    \item \textbf{Agitation du fluide :} En eau calme (bécher), la couche limite d'eau stagnante ralentit l'échange thermique comparé à une eau en circulation rapide (\qty{0.2}{\meter\per\second}).
 \end{itemize}
-La valeur mesurée $\tau \approx \qty{5.8}{\second}$ ($t_{95\%} \approx \qty{17.4}{\second}$) est donc tout à fait cohérente pour une sonde industrielle chemisée inox plongée dans de l'eau au repos.
+La valeur mesurée $\tau \approx \qty{5.8}{\second}$ ($t_{95\%} \approx \qty{17.4}{\second}$) est donc tout à fait cohérente avec une sonde chemisée inox dans l'eau au repos.
