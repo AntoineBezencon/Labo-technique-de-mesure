@@ -1,16 +1,12 @@
 % !TeX root = ../main.tex
-\chapter{Données brutes et scripts de traitement}
-\label{app:graphes}
+\chapter{Programmes LabVIEW (.vi)}
+\label{app:labview}
 
-Les séries temporelles brutes d'acquisition enregistrées lors des travaux pratiques sont archivées au format LabVIEW (\texttt{.lvm}) dans le répertoire \texttt{Resultat/} du projet :
-\begin{itemize}[leftmargin=1.2cm]
-    \item \texttt{Resultat/Normal.lvm} : série temporelle brute de la température en flux d'air chaud cadencée à \qty{20}{\milli\second} ($N = 520$ points) ;
-    \item \texttt{Resultat/Oversampling.lvm} : série temporelle brute de la température en flux d'air chaud avec suréchantillonnage moyenné par paquets de 100 points ($N = 375$ points) ;
-    \item \texttt{Resultat/4w\_sauttemp.lvm} : réponse indicielle de la sonde RTD Pt100 lors du plongeon dans l'eau chaude ($N = 114$ points après calage du zéro initial).
-\end{itemize}
+Les quatre programmes LabVIEW créés pour ce laboratoire se trouvent dans le dossier \texttt{Resultat/VI/} :
 
-Les scripts d'analyse numérique et de génération des figures vectorielles haute résolution respectant la charte graphique de la check-list TechMes sont disponibles dans le répertoire de code :
 \begin{itemize}[leftmargin=1.2cm]
-    \item \texttt{NTC.py} (dans \texttt{script/}) : chargement des fichiers LVM, calculs statistiques et tracé comparatif généré (figure~\ref{fig:diff_over_normal}) ;
-    \item \texttt{generate\_graph\_pt100.py} (dans \texttt{scripts/}) : calage temporel, ajustement non linéaire du premier ordre et tracé indiciel complet (figure~\ref{fig:reponse_indicielle_pt100}).
+    \item \texttt{Labo03\_NTC.vi} : mesure et conversion de température de la thermistance CTN en mode standard (cadence de \qty{20}{\milli\second}, formule inverse et interpolation par table) ;
+    \item \texttt{Labo03\_NTC\_OverSampling.vi} : mesure CTN avec suréchantillonnage (moyenne de paquets de 100 échantillons) ;
+    \item \texttt{Labo03\_PT100.vi} : mesure de résistance de la sonde Pt100 avec le multimètre Keysight 34460A (mode 2 fils et 4 fils, temporisation de \qty{500}{\milli\second}) ;
+    \item \texttt{Labo03\_PT100\_\ AprèsEtalonage.vi} : conversion de la résistance en température avec le sous-VI RTD (paramètres $R_0$, $A$ et $B$ étalonnés) et enregistrement des mesures du saut thermique dans un fichier.
 \end{itemize}
