@@ -31,7 +31,7 @@
   "latex-workshop.latex.autoBuild.interval": 500,
   "latex-workshop.latex.rootFile.useSubFile": false,
   "latex-workshop.latex.rootFile.doNotPrompt": true,
-  "latex-workshop.latex.search.rootFiles.include": ["main.tex"],
+  "latex-workshop.latex.search.rootFiles.include": ["main.tex", "**/main.tex"],
   "latex-workshop.latex.outDir": "%DIR%",
 
   "latex-workshop.latex.clean.fileTypes": [
