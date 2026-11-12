@@ -1,0 +1,7 @@
+
+port0 line0 barrieère
+port0 line1 verin sorti
+port0 line7 verin rentré
+port0 line2 ck/cck
+ai0 +-5v lvdt
+Dev 1/ctr0
